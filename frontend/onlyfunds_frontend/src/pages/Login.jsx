@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-const Login = () => {
+const Login = ({ onBackToHome }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -43,6 +43,7 @@ const Login = () => {
     if (validateForm()) {
       console.log('Login submitted:', formData);
       alert('Login successful! (Frontend only - no backend yet)');
+      onBackToHome();
     }
   };
 
@@ -55,6 +56,7 @@ const Login = () => {
   return (
     <div className="login-page">
       <div className="login-container">
+        <button className="back-link-button" onClick={onBackToHome}>← Back to Home</button>
         <div className="login-left">
           <div className="brand-section">
             <h1 className="logo">ONLY<span>FUNDS</span></h1>
