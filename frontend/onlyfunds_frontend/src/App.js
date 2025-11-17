@@ -61,7 +61,7 @@ function App() {
         <>
           <Homepage onNavigateToCampaign={handleNavigateToCampaign} onNavigateToCreate={handleNavigateToCreate} />
           <DonationCarousel onNavigateToCampaign={handleNavigateToCampaign} />
-         
+          <About />
           <Footer/>
           
         </>

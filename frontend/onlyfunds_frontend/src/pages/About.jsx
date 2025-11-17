@@ -1,12 +1,29 @@
 import React from 'react';
 import './About.css';
+import yoPhoto from '../assets/images/Yo.jpg';
+import cpPhoto from '../assets/images/Cp.jpg';
+import NicoloPhoto from '../assets/images/nicolo.jpg';
+
+
+// Import your core values icons/images
+import transparencyImg from '../assets/images/transparency.png';
+import integrityImg from '../assets/images/collaborate.png';
+import compassionImg from '../assets/images/compassion.png';
+import impactImg from '../assets/images/target.png';
+
+const coreValues = [
+  { title: "Transparency", img: transparencyImg, desc: "We believe in complete openness about where donations go and how they're used, building trust through clear communication." },
+  { title: "Integrity", img: integrityImg, desc: "We maintain the highest ethical standards in everything we do, ensuring every campaign is verified and legitimate." },
+  { title: "Compassion", img: compassionImg, desc: "We lead with empathy, understanding that behind every campaign is a real person or community in need of support." },
+  { title: "Impact", img: impactImg, desc: "We focus on creating real, measurable change in people's lives through effective and efficient donation distribution." },
+];
 
 const About = () => {
   return (
     <div className="about-page">
       {/* Hero Section */}
       <section className="about-hero">
-        <div className="hero-content">
+        <div className="hero-content container">
           <h1>About OnlyFunds</h1>
           <p className="hero-tagline">Connecting hearts, changing lives, one donation at a time</p>
         </div>
@@ -17,29 +34,15 @@ const About = () => {
         <div className="container">
           <h2 className="section-title">Our Core Values</h2>
           <div className="values-grid">
-            <div className="value-card">
-              <div className="value-icon">🤝</div>
-              <h3>Transparency</h3>
-              <p>We believe in complete openness about where donations go and how they're used, building trust through clear communication.</p>
-            </div>
-            
-            <div className="value-card">
-              <div className="value-icon">🛡️</div>
-              <h3>Integrity</h3>
-              <p>We maintain the highest ethical standards in everything we do, ensuring every campaign is verified and legitimate.</p>
-            </div>
-            
-            <div className="value-card">
-              <div className="value-icon">💙</div>
-              <h3>Compassion</h3>
-              <p>We lead with empathy, understanding that behind every campaign is a real person or community in need of support.</p>
-            </div>
-            
-            <div className="value-card">
-              <div className="value-icon">⚡</div>
-              <h3>Impact</h3>
-              <p>We focus on creating real, measurable change in people's lives through effective and efficient donation distribution.</p>
-            </div>
+            {coreValues.map((v) => (
+              <div className="value-card" key={v.title}>
+                <div className="value-icon-image">
+                  <img src={v.img} alt={v.title} />
+                </div>
+                <h3>{v.title}</h3>
+                <p>{v.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -51,26 +54,24 @@ const About = () => {
           <p className="section-subtitle">The passionate people making OnlyFunds possible</p>
           <div className="team-grid">
             <div className="team-member">
-              <div className="member-photo" style={{background: '#C6BEFA'}}>
-                <span>NG</span>
+              <div className="member-photo">
+                <img src={yoPhoto} alt="Yo" />
               </div>
-              <h4>Nicolo Francis Gabiana</h4>
+              <h4>Yusuf Oswa</h4>
               <p className="role">Co-Founder & Developer</p>
             </div>
-            
             <div className="team-member">
-              <div className="member-photo" style={{background: '#b0a3fa'}}>
-                <span>YO</span>
-              </div>
-              <h4>Yusuf Bin Mohammad Ali Oswa</h4>
-              <p className="role">Co-Founder & Developer</p>
-            </div>
-            
-            <div className="team-member">
-              <div className="member-photo" style={{background: '#9b8df8'}}>
-                <span>CP</span>
+              <div className="member-photo">
+                <img src={cpPhoto} alt="Cp" />
               </div>
               <h4>Clint Perales</h4>
+              <p className="role">Co-Founder & Developer</p>
+            </div>
+            <div className="team-member">
+              <div className="member-photo">
+                <img src={NicoloPhoto} alt="nicolo" />
+              </div>
+              <h4>Nicolo Francis Gabiana</h4>
               <p className="role">Co-Founder & Developer</p>
             </div>
           </div>
