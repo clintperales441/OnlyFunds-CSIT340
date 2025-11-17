@@ -1,6 +1,8 @@
 import React from 'react';
 import './About.css';
-
+import oswa from '../assets/images/oswa.jpg';
+import nicolo from '../assets/images/nicolo.jpg';
+import clint from '../assets/images/clint.jpg';
 const About = () => {
   return (
     <div className="about-page">
@@ -51,28 +53,47 @@ const About = () => {
           <p className="section-subtitle">The passionate people making OnlyFunds possible</p>
           <div className="team-grid">
             <div className="team-member">
-              <div className="member-photo" style={{background: '#C6BEFA'}}>
-                <span>NG</span>
-              </div>
-              <h4>Nicolo Francis Gabiana</h4>
-              <p className="role">Co-Founder & Developer</p>
+                <div
+                  className="member-photo"
+                  style={{
+                    backgroundImage: `url(${nicolo})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                ></div>
+
+                <h4>Nicolo Francis Gabiana</h4>
+                <p className="role">Co-Founder & Developer</p>
             </div>
             
             <div className="team-member">
-              <div className="member-photo" style={{background: '#b0a3fa'}}>
-                <span>YO</span>
-              </div>
-              <h4>Yusuf Bin Mohammad Ali Oswa</h4>
-              <p className="role">Co-Founder & Developer</p>
+                <div
+                  className="member-photo"
+                  style={{
+                    backgroundImage: `url(${oswa})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                ></div>
+
+                <h4>Yusuf Bin Mohammad Ali Oswa</h4>
+                <p className="role">Co-Founder & Developer</p>
+            </div>
+
+            <div className="team-member">
+                <div
+                  className="member-photo"
+                  style={{
+                    backgroundImage: `url(${clint})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                ></div>
+
+                <h4>Clint Perales</h4>
+                <p className="role">Co-Founder & Developer</p>
             </div>
             
-            <div className="team-member">
-              <div className="member-photo" style={{background: '#9b8df8'}}>
-                <span>CP</span>
-              </div>
-              <h4>Clint Perales</h4>
-              <p className="role">Co-Founder & Developer</p>
-            </div>
           </div>
         </div>
       </section>
