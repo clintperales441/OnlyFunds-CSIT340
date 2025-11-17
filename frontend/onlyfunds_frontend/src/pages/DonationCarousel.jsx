@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './DonationCarousel.css';
 
 // Import your actual images
-import childrenFoundation from '../assets/images/children-foundation-card.jpg';
+
 import educationFund from '../assets/images/education-fund-card.jpg';
 import healthSupport from '../assets/images/health-support-card.jpg';
 import petDonation from '../assets/images/pet-donation-card.jpg';

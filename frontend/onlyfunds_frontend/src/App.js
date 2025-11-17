@@ -5,6 +5,7 @@ import DonationCarousel from './pages/DonationCarousel';
 import Campaign from './pages/Campaign';
 import CreateCampaign from './pages/CreateCampaign';
 import Footer from './pages/Footer';
+import About from './pages/About';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -44,7 +45,9 @@ function App() {
         <>
           <Homepage onNavigateToCampaign={handleNavigateToCampaign} onNavigateToCreate={handleNavigateToCreate} />
           <DonationCarousel onNavigateToCampaign={handleNavigateToCampaign} />
+         
           <Footer/>
+          
         </>
       ) : currentView === 'create' ? (
         <>
