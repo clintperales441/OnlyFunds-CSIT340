@@ -12,7 +12,7 @@
 
 .carousel-header h2 {
   font-size: 2.5rem;
-  color: #2D2A6D;
+  color: #2d2a6d;
   margin-bottom: 15px;
 }
 
@@ -85,13 +85,17 @@
 }
 
 .card-image::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.3)
+  );
 }
 
 .card-content {
@@ -100,7 +104,7 @@
 
 .card-content h3 {
   font-size: 1.8rem;
-  color: #2D2A6D;
+  color: #2d2a6d;
   margin-bottom: 15px;
   font-weight: 700;
 }
@@ -125,7 +129,7 @@
 }
 
 .progress-stats .raised {
-  color: #2D2A6D;
+  color: #2d2a6d;
   font-weight: 600;
 }
 
@@ -143,7 +147,7 @@
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #C6BEFA 0%, #8b7ff5 100%);
+  background: linear-gradient(90deg, #c6befa 0%, #8b7ff5 100%);
   border-radius: 10px;
   transition: width 1s ease-out;
   position: relative;
@@ -151,7 +155,7 @@
 }
 
 .progress-bar-fill::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -177,13 +181,13 @@
 
 .percentage {
   font-size: 0.9rem;
-  color: #2D2A6D;
+  color: #2d2a6d;
   font-weight: 600;
 }
 
 .donate-btn {
   width: 100%;
-  background-color: #2D2A6D;
+  background-color: #2d2a6d;
   color: white;
   border: none;
   padding: 16px;
@@ -228,11 +232,11 @@
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   z-index: 10;
-  color: #2D2A6D;
+  color: #2d2a6d;
 }
 
 .carousel-btn:hover {
-  background-color: #2D2A6D;
+  background-color: #2d2a6d;
   color: white;
   transform: translateY(-50%) scale(1.1);
 }
@@ -256,7 +260,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 2px solid #C6BEFA;
+  border: 2px solid #c6befa;
   background: transparent;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -264,14 +268,14 @@
 }
 
 .dot.active {
-  background-color: #2D2A6D;
-  border-color: #2D2A6D;
+  background-color: #2d2a6d;
+  border-color: #2d2a6d;
   width: 40px;
   border-radius: 6px;
 }
 
 .dot:hover:not(.active) {
-  background-color: #C6BEFA;
+  background-color: #c6befa;
   transform: scale(1.2);
 }
 
@@ -280,11 +284,11 @@
   .carousel-card {
     width: 400px;
   }
-  
+
   .carousel-btn.prev {
     left: 10px;
   }
-  
+
   .carousel-btn.next {
     right: 10px;
   }
@@ -333,27 +337,369 @@
   .carousel-btn.prev {
     left: 5px;
   }
-  
+
   .carousel-btn.next {
     right: 5px;
   }
 }
 
-@media (max-width: 480px) {
-  .carousel-card {
-    width: 300px;
+/* Carousel Donation Modal */
+.carousel-donation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.carousel-donation-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 450px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: carouselSlideIn 0.3s ease;
+}
+
+@keyframes carouselSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.carousel-modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  z-index: 10;
+}
+
+.carousel-modal-close-btn:hover {
+  color: #5b41f1;
+}
+
+.carousel-modal-header {
+  padding: 25px 25px 15px;
+  border-bottom: 1px solid #e8e6f8;
+}
+
+.carousel-modal-header h2 {
+  margin: 0 0 5px 0;
+  font-size: 1.6rem;
+  color: #1a1a1a;
+}
+
+.carousel-campaign-name {
+  margin: 0;
+  color: #5b41f1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Carousel Donation Form */
+.carousel-donation-form {
+  padding: 25px;
+}
+
+.carousel-amount-section {
+  margin-bottom: 25px;
+}
+
+.carousel-payment-section {
+  margin-bottom: 18px;
+}
+
+.carousel-payment-section label {
+  display: block;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.carousel-payment-methods {
+  display: flex;
+  gap: 8px;
+}
+
+.carousel-payment-btn {
+  padding: 8px 12px;
+  border: 2px solid #e8e6f8;
+  background: white;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+}
+
+.carousel-payment-btn:hover {
+  border-color: #5b41f1;
+  color: #5b41f1;
+}
+
+.carousel-payment-btn.active {
+  background-color: #5b41f1;
+  color: white;
+  border-color: #5b41f1;
+}
+
+.carousel-card-inputs .carousel-form-group {
+  margin-bottom: 12px;
+}
+
+.carousel-card-inputs .carousel-form-row {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.carousel-amount-section label {
+  display: block;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.carousel-amount-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.carousel-amount-btn {
+  padding: 10px;
+  border: 2px solid #e8e6f8;
+  background: white;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+}
+
+.carousel-amount-btn:hover {
+  border-color: #5b41f1;
+  color: #5b41f1;
+}
+
+.carousel-amount-btn.active {
+  background-color: #5b41f1;
+  color: white;
+  border-color: #5b41f1;
+}
+
+.carousel-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.carousel-custom-amount {
+  margin-top: 12px;
+  margin-bottom: 18px;
+}
+
+.carousel-custom-amount label {
+  display: block;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.carousel-custom-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.carousel-custom-input .currency {
+  padding: 10px 12px;
+  background: #f8f7ff;
+  border: 2px solid #e8e6f8;
+  border-radius: 8px;
+  color: #666;
+}
+
+.carousel-custom-input input[type="number"] {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #e8e6f8;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.carousel-form-group {
+  margin-bottom: 15px;
+}
+
+.carousel-form-group label {
+  display: block;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.carousel-form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e8e6f8;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.carousel-form-group input:focus {
+  outline: none;
+  border-color: #5b41f1;
+}
+
+.carousel-form-options {
+  background-color: #f8f7ff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.carousel-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  margin: 0;
+}
+
+.carousel-checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #5b41f1;
+}
+
+.carousel-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.carousel-btn-cancel,
+.carousel-btn-submit {
+  flex: 1;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.carousel-btn-cancel {
+  background-color: #e8e6f8;
+  color: #5b41f1;
+}
+
+.carousel-btn-cancel:hover {
+  background-color: #d8d4f0;
+}
+
+.carousel-btn-submit {
+  background: linear-gradient(135deg, #5b41f1 0%, #8b80f9 100%);
+  color: white;
+}
+
+.carousel-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(91, 65, 241, 0.3);
+}
+
+.carousel-btn-submit:active {
+  transform: translateY(0);
+}
+
+.carousel-security-info {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  padding-top: 10px;
+  border-top: 1px solid #e8e6f8;
+}
+
+.carousel-security-info p {
+  margin: 0;
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+  .carousel-donation-modal {
+    max-width: 90vw;
   }
 
-  .card-image {
-    height: 180px;
+  .carousel-modal-header {
+    padding: 20px 15px 12px;
   }
 
-  .card-content {
+  .carousel-modal-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .carousel-donation-form {
     padding: 20px;
   }
 
-  .card-description {
-    font-size: 0.95rem;
-    min-height: auto;
+  .carousel-form-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
+
+  .carousel-amount-buttons {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .carousel-form-group {
+    margin-bottom: 12px;
+  }
+}
+.carousel-card {
+  width: 300px;
+}
+
+.card-image {
+  height: 180px;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-description {
+  font-size: 0.95rem;
+  min-height: auto;
 }
