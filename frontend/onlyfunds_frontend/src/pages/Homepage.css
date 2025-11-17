@@ -105,7 +105,7 @@ nav a:hover:after {
 }
 
 nav a:hover {
-  color: #5841f1;
+  color: #ffffff;
 }
 
 /* Hero Section */
@@ -121,7 +121,7 @@ nav a:hover {
 
 .hero h2 {
   font-size: 3.5rem;
-  color: #2D2A6D;
+  color: #ffffff;
   margin-bottom: 25px;
   line-height: 1.2;
 }
@@ -130,7 +130,7 @@ nav a:hover {
   font-size: 1.4rem;
   line-height: 1.6;
   margin-bottom: 40px;
-  color: #2D2A6D;
+  color: #ffffff;
 }
 
 .cta-buttons {
@@ -547,4 +547,8 @@ nav a:hover {
   .social-links {
     justify-content: center;
   }
+}
+
+.progress-bar {
+  display: none !important;
 }
