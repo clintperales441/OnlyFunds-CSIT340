@@ -125,7 +125,7 @@ nav a:hover {
 
 .hero h2 {
   font-size: 3.5rem;
-  color: #ffffff;
+  color: #2d2a6d;
   margin-bottom: 25px;
   line-height: 1.2;
 }
@@ -134,7 +134,7 @@ nav a:hover {
   font-size: 1.4rem;
   line-height: 1.6;
   margin-bottom: 40px;
-  color: #ffffff;
+  color: #2d2a6d; 
 }
 
 .cta-buttons {
@@ -579,3 +579,6 @@ nav a:hover {
 .progress-bar {
   display: none !important;
 }
+
+
+

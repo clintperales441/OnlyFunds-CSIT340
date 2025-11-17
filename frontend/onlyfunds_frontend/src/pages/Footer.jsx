@@ -46,7 +46,7 @@ const Footer = () => {
             <a href="#tw">TW</a>
             <a href="#li">LI</a>
           </div>
-          <div className="copyright">© 2023 Onlyfunds. All rights reserved.</div>
+          <div className="copyright">© 2025 Onlyfunds. All rights reserved.</div>
         </div>
       </footer>
   );

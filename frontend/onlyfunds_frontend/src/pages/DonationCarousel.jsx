@@ -142,7 +142,7 @@ const DonationCarousel = ({ onNavigateToCampaign }) => {
     <div className="carousel-container">
       <div className="carousel-header">
         <h2>Choose Your Cause</h2>
-        <p>Select a campaign that speaks to your heart and make a difference today</p>
+        <p>Select a foundation that resonates with you and make an impact today through a direct donation.</p>
       </div>
 
       <div className="carousel-wrapper">
