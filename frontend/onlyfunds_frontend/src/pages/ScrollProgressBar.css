@@ -1,0 +1,233 @@
+/* ScrollProgressBar.css */
+
+.scroll-progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: rgba(198, 190, 250, 0.2);
+  z-index: 9999;
+}
+
+.scroll-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #C6BEFA 0%, #8b7ff5 50%, #2D2A6D 100%);
+  transition: width 0.1s ease-out;
+  box-shadow: 0 0 10px rgba(198, 190, 250, 0.5);
+  position: relative;
+}
+
+.scroll-progress-bar::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4)
+  );
+  animation: shimmer-progress 1.5s infinite;
+}
+
+@keyframes shimmer-progress {
+  0% {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+}
+
+/* Temporary Navbar */
+.temp-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  z-index: 9998;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+  padding: 15px 0;
+}
+
+.temp-navbar.visible {
+  transform: translateY(0);
+}
+
+.temp-navbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.temp-logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2D2A6D;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.temp-logo span {
+  color: #C6BEFA;
+}
+
+.temp-logo:hover {
+  color: #5841f1;
+}
+
+.temp-nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.temp-nav-links a {
+  color: #2D2A6D;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  position: relative;
+  padding: 5px 0;
+}
+
+.temp-nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #C6BEFA;
+  transition: width 0.3s ease;
+}
+
+.temp-nav-links a:hover {
+  color: #5841f1;
+}
+
+.temp-nav-links a:hover::after {
+  width: 100%;
+}
+
+.temp-donate-btn {
+  background-color: #2D2A6D;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.temp-donate-btn:hover {
+  background-color: #1a1741;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(45, 42, 109, 0.3);
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #2D2A6D;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 20px rgba(45, 42, 109, 0.3);
+  transition: all 0.3s ease;
+  z-index: 9997;
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: all;
+}
+
+.scroll-to-top:hover {
+  background-color: #1a1741;
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(45, 42, 109, 0.4);
+}
+
+.scroll-to-top svg {
+  transition: transform 0.3s ease;
+}
+
+.scroll-to-top:hover svg {
+  transform: translateY(-3px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .temp-navbar-content {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .temp-nav-links {
+    gap: 15px;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .temp-nav-links a {
+    font-size: 0.9rem;
+  }
+
+  .temp-logo {
+    font-size: 1.5rem;
+  }
+
+  .temp-donate-btn {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+
+  .scroll-to-top {
+    width: 45px;
+    height: 45px;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .temp-nav-links {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .temp-nav-links a {
+    font-size: 0.85rem;
+  }
+}
