@@ -58,12 +58,7 @@ const Homepage = () => {
             className={`slide ${index === currentImageIndex ? 'active' : ''}`}
             style={{ backgroundImage: `url(${img})` }}
           >
-            {/* Progress bar */}
-            {index === currentImageIndex && (
-              <div className="progress-bar">
-                <div className="progress" style={{ width: `${progress}%` }}></div>
-              </div>
-            )}
+      
           </div>
         ))}
       </div>
@@ -71,13 +66,8 @@ const Homepage = () => {
       {/* Content overlay */}
       <div className="content-overlay">
         <header className="header">
-          <h1 className="logo">ONLY<span>FUNDS</span></h1>
-          <nav>
-            <a href="#about">About</a>
-            <a href="#campaigns">Campaigns</a>
-            <a href="#donate">Donate</a>
-            <a href="#contact">Contact</a>
-          </nav>
+          <h1 className="logo">ONLY<span>FUNDS</span></h1> 
+      
         </header>
 
         <main className="hero">
@@ -199,51 +189,6 @@ const Homepage = () => {
           </div>
         </div>
       </section>
-
-      <footer className="footer">
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <div className="logo">ONLY<span>FUNDS</span></div>
-            <p className="tagline">Making giving simple and impactful</p>
-          </div>
-          
-          <div className="footer-links">
-            <h4>Quick Links</h4>
-            <a href="#about">About Us</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#campaigns">Browse Campaigns</a>
-            <a href="#start">Start a Campaign</a>
-          </div>
-          
-          <div className="footer-links">
-            <h4>Support</h4>
-            <a href="#faq">FAQ</a>
-            <a href="#contact">Contact Us</a>
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-          </div>
-          
-          <div className="footer-newsletter">
-            <h4>Stay Updated</h4>
-            <p>Subscribe to our newsletter for inspiring stories and updates</p>
-            <div className="subscribe-form">
-              <input type="email" placeholder="Your email address" />
-              <button>Subscribe</button>
-            </div>
-          </div>
-        </div>
-        
-        <div className="footer-bottom">
-          <div className="social-links">
-            <span>Follow us:</span>
-            <a href="#fb">FB</a>
-            <a href="#ig">IG</a>
-            <a href="#tw">TW</a>
-            <a href="#li">LI</a>
-          </div>
-          <div className="copyright">© 2023 Onlyfunds. All rights reserved.</div>
-        </div>
-      </footer>
     </div>
   );
 };
