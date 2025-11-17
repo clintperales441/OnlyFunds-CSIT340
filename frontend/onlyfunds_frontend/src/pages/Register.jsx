@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Register.css';
 
-const Register = () => {
+const Register = ({ onBackToHome }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -64,12 +64,14 @@ const Register = () => {
     if (validateForm()) {
       console.log('Form submitted:', formData);
       alert('Registration successful! (Frontend only - no backend yet)');
+      onBackToHome();
     }
   };
 
   return (
     <div className="register-page">
       <div className="register-container">
+        <button className="back-link-button" onClick={onBackToHome}>← Back to Home</button>
         <div className="register-left">
           <div className="brand-section">
             <h1 className="logo">ONLY<span>FUNDS</span></h1>

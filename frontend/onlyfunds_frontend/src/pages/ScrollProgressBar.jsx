@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ScrollProgressBar.css';
 
-const ScrollProgressBar = () => {
+const ScrollProgressBar = ({ onNavigateToLogin, onNavigateToRegister, onNavigateToHome }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showNavbar, setShowNavbar] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -60,8 +60,9 @@ const ScrollProgressBar = () => {
             <a href="#campaigns">Campaigns</a>
             <a href="#donate">Donate</a>
             <a href="#contact">Contact</a>
+            <button className="temp-login-btn" onClick={onNavigateToLogin}>Login</button>
+            <button className="temp-register-btn" onClick={onNavigateToRegister}>Register</button>
           </div>
-
         </div>
       </nav>
 
