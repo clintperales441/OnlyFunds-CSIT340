@@ -4,6 +4,8 @@ import Homepage from './pages/Homepage';
 import DonationCarousel from './pages/DonationCarousel';
 import Campaign from './pages/Campaign';
 import CreateCampaign from './pages/CreateCampaign';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import Footer from './pages/Footer';
 import About from './pages/About';
 
@@ -20,6 +22,16 @@ function App() {
 
   const handleNavigateToCreate = () => {
     setCurrentView('create');
+    window.scrollTo(0, 0);
+  };
+
+  const handleNavigateToLogin = () => {
+    setCurrentView('login');
+    window.scrollTo(0, 0);
+  };
+
+  const handleNavigateToRegister = () => {
+    setCurrentView('register');
     window.scrollTo(0, 0);
   };
 
@@ -40,7 +52,11 @@ function App() {
 
   return (
     <div className="App">
-      <ScrollProgressBar/>
+      <ScrollProgressBar
+        onNavigateToLogin={handleNavigateToLogin}
+        onNavigateToRegister={handleNavigateToRegister}
+        onNavigateToHome={handleBackToHome}
+      />
       {currentView === 'home' ? (
         <>
           <Homepage onNavigateToCampaign={handleNavigateToCampaign} onNavigateToCreate={handleNavigateToCreate} />
@@ -52,6 +68,16 @@ function App() {
       ) : currentView === 'create' ? (
         <>
           <CreateCampaign onCancel={handleBackToHome} onCreate={handleCreateCampaign} />
+          <Footer/>
+        </>
+      ) : currentView === 'login' ? (
+        <>
+          <Login onBackToHome={handleBackToHome} />
+          <Footer/>
+        </>
+      ) : currentView === 'register' ? (
+        <>
+          <Register onBackToHome={handleBackToHome} />
           <Footer/>
         </>
       ) : (
