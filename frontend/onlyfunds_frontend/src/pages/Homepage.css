@@ -48,7 +48,11 @@
 /* Content Overlay */
 .content-overlay {
   min-height: 100vh;
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.95) 0%, transparent 70vh);
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    transparent 70vh
+  );
   padding-top: 30px;
   position: relative;
   z-index: 1;
@@ -67,11 +71,11 @@
 .logo {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2D2A6D;
+  color: #2d2a6d;
 }
 
 .logo span {
-  color: #C6BEFA;
+  color: #c6befa;
 }
 
 nav {
@@ -80,7 +84,7 @@ nav {
 }
 
 nav a {
-  color: #2D2A6D;
+  color: #2d2a6d;
   text-decoration: none;
   font-size: 1.1rem;
   font-weight: 500;
@@ -90,13 +94,13 @@ nav a {
 }
 
 nav a:after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #C6BEFA;
+  background-color: #c6befa;
   transition: width 0.3s ease;
 }
 
@@ -139,7 +143,7 @@ nav a:hover {
 }
 
 .donate-button {
-  background-color: #2D2A6D;
+  background-color: #2d2a6d;
   color: white;
   border: none;
   padding: 16px 40px;
@@ -151,8 +155,8 @@ nav a:hover {
 }
 
 .create-button {
-  background-color: #C6BEFA;
-  color: #2D2A6D;
+  background-color: #c6befa;
+  color: #2d2a6d;
   border: none;
   padding: 16px 40px;
   font-size: 1.1rem;
@@ -188,7 +192,7 @@ nav a:hover {
 
 .section-header h3 {
   font-size: 2.5rem;
-  color: #2D2A6D;
+  color: #2d2a6d;
   margin-bottom: 15px;
 }
 
@@ -235,13 +239,36 @@ nav a:hover {
 
 .campaign-details h4 {
   font-size: 1.3rem;
-  color: #2D2A6D;
+  color: #2d2a6d;
   margin-bottom: 20px;
   line-height: 1.4;
 }
 
 .progress-container {
   margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+.view-campaign-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #5b41f1 0%, #8b80f9 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-campaign-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(91, 65, 241, 0.3);
+}
+
+.view-campaign-btn:active {
+  transform: translateY(0);
 }
 
 .progress-bar.small {
@@ -252,7 +279,7 @@ nav a:hover {
 }
 
 .progress-bar.small .progress {
-  background-color: #C6BEFA;
+  background-color: #c6befa;
   height: 100%;
   transition: width 0.5s ease;
 }
@@ -267,7 +294,7 @@ nav a:hover {
 
 /* Stats Section */
 .stats-section {
-  background: linear-gradient(45deg, #2D2A6D, #1a1741);
+  background: linear-gradient(45deg, #2d2a6d, #1a1741);
   padding: 80px 20px;
   color: white;
 }
@@ -288,7 +315,7 @@ nav a:hover {
   font-size: 3.5rem;
   font-weight: 700;
   margin-bottom: 10px;
-  color: #C6BEFA;
+  color: #c6befa;
 }
 
 .stat-label {
@@ -316,7 +343,7 @@ nav a:hover {
 
 .info-text h3 {
   font-size: 2.5rem;
-  color: #2D2A6D;
+  color: #2d2a6d;
   margin-bottom: 25px;
 }
 
@@ -344,15 +371,15 @@ nav a:hover {
   position: absolute;
   left: 0;
   top: 0;
-  color: #C6BEFA;
+  color: #c6befa;
   font-size: 1.2rem;
   font-weight: bold;
 }
 
 .learn-more {
   background: none;
-  border: 2px solid #C6BEFA;
-  color: #2D2A6D;
+  border: 2px solid #c6befa;
+  color: #2d2a6d;
   padding: 14px 40px;
   font-size: 1.1rem;
   border-radius: 8px;
@@ -363,7 +390,7 @@ nav a:hover {
 }
 
 .learn-more:hover {
-  background-color: #C6BEFA;
+  background-color: #c6befa;
 }
 
 .info-image .placeholder {
@@ -379,7 +406,7 @@ nav a:hover {
 
 /* Footer */
 .footer {
-  background: #2D2A6D;
+  background: #2d2a6d;
   color: #fff;
   padding: 80px 20px 0;
 }
@@ -400,7 +427,7 @@ nav a:hover {
 }
 
 .footer-brand .logo span {
-  color: #C6BEFA;
+  color: #c6befa;
 }
 
 .footer-brand .tagline {
@@ -413,7 +440,7 @@ nav a:hover {
 .footer-links h4 {
   font-size: 1.3rem;
   margin-bottom: 25px;
-  color: #C6BEFA;
+  color: #c6befa;
 }
 
 .footer-links a {
@@ -425,13 +452,13 @@ nav a:hover {
 }
 
 .footer-links a:hover {
-  color: #C6BEFA;
+  color: #c6befa;
 }
 
 .footer-newsletter h4 {
   font-size: 1.3rem;
   margin-bottom: 25px;
-  color: #C6BEFA;
+  color: #c6befa;
 }
 
 .footer-newsletter p {
@@ -454,8 +481,8 @@ nav a:hover {
 }
 
 .subscribe-form button {
-  background-color: #C6BEFA;
-  color: #2D2A6D;
+  background-color: #c6befa;
+  color: #2d2a6d;
   border: none;
   padding: 0 25px;
   font-weight: 600;
@@ -485,7 +512,7 @@ nav a:hover {
 }
 
 .social-links a {
-  color: #C6BEFA;
+  color: #c6befa;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
@@ -504,15 +531,15 @@ nav a:hover {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
-  
+
   .info-content {
     flex-direction: column;
   }
-  
+
   .hero h2 {
     font-size: 2.8rem;
   }
-  
+
   .cta-buttons {
     flex-direction: column;
   }
@@ -523,27 +550,27 @@ nav a:hover {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   nav {
     margin-top: 20px;
     flex-wrap: wrap;
     gap: 15px 25px;
   }
-  
+
   .footer-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .hero h2 {
     font-size: 2.3rem;
   }
-  
+
   .footer-bottom {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
+
   .social-links {
     justify-content: center;
   }

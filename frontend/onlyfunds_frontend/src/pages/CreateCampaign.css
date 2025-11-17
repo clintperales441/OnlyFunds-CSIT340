@@ -1,0 +1,69 @@
+.create-campaign-page {
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.create-container {
+  width: 100%;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  padding: 28px;
+}
+
+.back-button {
+  background: transparent;
+  border: none;
+  color: #555;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.create-form label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.create-form input,
+.create-form select,
+.create-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.create-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.cancel-btn {
+  background: #f4f4f4;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background: #6b5cff;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}

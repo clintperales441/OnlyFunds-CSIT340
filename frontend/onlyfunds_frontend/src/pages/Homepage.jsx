@@ -8,7 +8,7 @@ import educationFund from '../assets/images/education-fund.jpg';
 import healthSupport from '../assets/images/health-support.jpg';
 import communityHelp from '../assets/images/community-help.jpg';
 
-const Homepage = () => {
+const Homepage = ({ onNavigateToCampaign, onNavigateToCreate }) => {
   // Array of your actual imported images
   const backgroundImages = [
     petDonation,
@@ -79,7 +79,7 @@ const Homepage = () => {
             </p>
             <div className="cta-buttons">
               <button className="donate-button">Donate Now</button>
-              <button className="create-button">Create Campaign</button>
+              <button className="create-button" onClick={onNavigateToCreate}>Create Campaign</button>
             </div>
           </div>
         </main>
@@ -106,6 +106,7 @@ const Homepage = () => {
                   <span>$24,580 raised</span>
                 </div>
               </div>
+              <button className="view-campaign-btn" onClick={() => onNavigateToCampaign(1)}>View Campaign</button>
             </div>
           </div>
           
@@ -124,6 +125,7 @@ const Homepage = () => {
                   <span>$18,750 raised</span>
                 </div>
               </div>
+              <button className="view-campaign-btn" onClick={() => onNavigateToCampaign(2)}>View Campaign</button>
             </div>
           </div>
           
@@ -142,6 +144,7 @@ const Homepage = () => {
                   <span>$42,350 raised</span>
                 </div>
               </div>
+              <button className="view-campaign-btn" onClick={() => onNavigateToCampaign(3)}>View Campaign</button>
             </div>
           </div>
         </div>
