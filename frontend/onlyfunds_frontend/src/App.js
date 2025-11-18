@@ -6,6 +6,7 @@ import Campaign from './pages/Campaign';
 import CreateCampaign from './pages/CreateCampaign';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
 import Footer from './pages/Footer';
 import About from './pages/About';
 
@@ -35,6 +36,11 @@ function App() {
     window.scrollTo(0, 0);
   };
 
+  const handleNavigateToProfile = () => {
+    setCurrentView('profile');
+    window.scrollTo(0, 0);
+  };
+
   const handleCreateCampaign = (campaignData) => {
     // assign a new id (timestamp-based) and store locally
     const newId = Date.now();
@@ -55,6 +61,7 @@ function App() {
       <ScrollProgressBar
         onNavigateToLogin={handleNavigateToLogin}
         onNavigateToRegister={handleNavigateToRegister}
+        onNavigateToProfile={handleNavigateToProfile}
         onNavigateToHome={handleBackToHome}
       />
       {currentView === 'home' ? (
@@ -78,6 +85,11 @@ function App() {
       ) : currentView === 'register' ? (
         <>
           <Register onBackToHome={handleBackToHome} />
+          <Footer/>
+        </>
+      ) : currentView === 'profile' ? (
+        <>
+          <Profile onBackToHome={handleBackToHome} />
           <Footer/>
         </>
       ) : (

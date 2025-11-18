@@ -93,7 +93,7 @@
 }
 
 .temp-nav-links a {
-  color: #2d2a6d;
+  color: #2D2A6D;
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
@@ -103,13 +103,13 @@
 }
 
 .temp-nav-links a::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #c6befa;
+  background-color: #C6BEFA;
   transition: width 0.3s ease;
 }
 
@@ -122,7 +122,7 @@
 }
 
 .temp-login-btn {
-  color: #2d2a6d;
+  color: #2D2A6D;
   background: transparent;
   border: none;
   text-decoration: none;
@@ -135,13 +135,13 @@
 }
 
 .temp-login-btn::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #c6befa;
+  background-color: #C6BEFA;
   transition: width 0.3s ease;
 }
 
@@ -154,7 +154,7 @@
 }
 
 .temp-register-btn {
-  color: #2d2a6d;
+  color: #2D2A6D;
   background: transparent;
   border: none;
   text-decoration: none;
@@ -167,13 +167,13 @@
 }
 
 .temp-register-btn::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #c6befa;
+  background-color: #C6BEFA;
   transition: width 0.3s ease;
 }
 
@@ -182,6 +182,38 @@
 }
 
 .temp-register-btn:hover::after {
+  width: 100%;
+}
+
+.temp-profile-btn {
+  color: #2D2A6D;
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  position: relative;
+  padding: 5px 0;
+  cursor: pointer;
+}
+
+.temp-profile-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #C6BEFA;
+  transition: width 0.3s ease;
+}
+
+.temp-profile-btn:hover {
+  color: #5841f1;
+}
+
+.temp-profile-btn:hover::after {
   width: 100%;
 }
 
@@ -272,6 +304,10 @@
     font-size: 0.9rem;
   }
 
+  .temp-profile-btn {
+    font-size: 0.9rem;
+  }
+
   .temp-logo {
     font-size: 1.5rem;
   }
@@ -304,6 +340,10 @@
   }
 
   .temp-register-btn {
+    font-size: 0.85rem;
+  }
+
+  .temp-profile-btn {
     font-size: 0.85rem;
   }
 }
