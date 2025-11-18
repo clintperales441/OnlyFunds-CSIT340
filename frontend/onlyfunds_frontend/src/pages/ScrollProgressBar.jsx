@@ -1,35 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import './ScrollProgressBar.css';
 
-const ScrollProgressBar = ({ onNavigateToLogin, onNavigateToRegister, onNavigateToHome }) => {
+const ScrollProgressBar = ({
+  onNavigateToLogin,
+  onNavigateToRegister,
+  onNavigateToHome,
+  currentUser,
+  onLogout
+}) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showNavbar, setShowNavbar] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = (currentScrollY / scrollHeight) * 100;
-      
       setScrollProgress(progress);
-      
-      // Show navbar after scrolling down 100px
-      if (currentScrollY > 100) {
-        setShowNavbar(true);
-      } else {
-        setShowNavbar(false);
-      }
-      
-      setLastScrollY(currentScrollY);
+      setShowNavbar(currentScrollY > 100);
     };
 
     window.addEventListener('scroll', handleScroll);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY]);
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -48,20 +44,33 @@ const ScrollProgressBar = ({ onNavigateToLogin, onNavigateToRegister, onNavigate
         ></div>
       </div>
 
-      {/* Temporary Navbar */}
+      {/* Navbar */}
       <nav className={`temp-navbar ${showNavbar ? 'visible' : ''}`}>
         <div className="temp-navbar-content">
-          {/* <div className="temp-logo" onClick={scrollToTop}>
-            ONLY<span>FUNDS</span>
-          </div> */}
-          
           <div className="temp-nav-links">
             <a href="#about">About</a>
             <a href="#campaigns">Campaigns</a>
             <a href="#donate">Donate</a>
             <a href="#contact">Contact</a>
-            <button className="temp-login-btn" onClick={onNavigateToLogin}>Login</button>
-            <button className="temp-register-btn" onClick={onNavigateToRegister}>Register</button>
+            
+            {currentUser ? (
+              <div className="navbar-user-pill">
+                <span className="navbar-user-avatar">
+                  <svg width="24" height="24" fill="#7957fa" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z"/></svg>
+                </span>
+                <span className="navbar-user-name">{currentUser.firstName || currentUser.email}</span>
+                <button className="navbar-logout-icon" onClick={onLogout} title="Log out">
+                  <svg height="22" width="22" fill="#888" viewBox="0 0 24 24">
+                    <path d="M16 13v-2H7V8l-5 4 5 4v-3h9z"/><path d="M20 3H12c-1.1 0-2 .9-2 2v4h2V5h8v14h-8v-4h-2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <>
+                <button className="temp-login-btn" onClick={onNavigateToLogin}>Login</button>
+                <button className="temp-register-btn" onClick={onNavigateToRegister}>Register</button>
+              </>
+            )}
           </div>
         </div>
       </nav>

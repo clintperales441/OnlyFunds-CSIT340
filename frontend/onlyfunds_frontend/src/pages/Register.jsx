@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './Register.css';
 
-const Register = ({ onBackToHome }) => {
+// Accept the new prop for login navigation!
+const Register = ({ onBackToHome, onGoToLogin }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -64,7 +65,9 @@ const Register = ({ onBackToHome }) => {
     if (validateForm()) {
       console.log('Form submitted:', formData);
       alert('Registration successful! (Frontend only - no backend yet)');
-      onBackToHome();
+      if (onGoToLogin) {
+        onGoToLogin(); // Redirects to login page after registration
+      }
     }
   };
 

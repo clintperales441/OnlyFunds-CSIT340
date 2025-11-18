@@ -13,6 +13,7 @@ function App() {
   const [currentView, setCurrentView] = useState('home');
   const [selectedCampaignId, setSelectedCampaignId] = useState(1);
   const [createdCampaigns, setCreatedCampaigns] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const handleNavigateToCampaign = (campaignId) => {
     setSelectedCampaignId(campaignId);
@@ -50,9 +51,24 @@ function App() {
     window.scrollTo(0, 0);
   };
 
+  // Login handler to save user data (expects {firstName, ...})
+  const handleLogin = (userObj) => {
+    setCurrentUser(userObj);
+    setCurrentView('home');
+    window.scrollTo(0, 0);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setCurrentView('home');
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="App">
       <ScrollProgressBar
+        currentUser={currentUser}
+        onLogout={handleLogout}
         onNavigateToLogin={handleNavigateToLogin}
         onNavigateToRegister={handleNavigateToRegister}
         onNavigateToHome={handleBackToHome}
@@ -63,7 +79,6 @@ function App() {
           <DonationCarousel onNavigateToCampaign={handleNavigateToCampaign} />
           <About />
           <Footer/>
-          
         </>
       ) : currentView === 'create' ? (
         <>
@@ -72,12 +87,12 @@ function App() {
         </>
       ) : currentView === 'login' ? (
         <>
-          <Login onBackToHome={handleBackToHome} />
+          <Login onBackToHome={handleBackToHome} onLogin={handleLogin} />
           <Footer/>
         </>
       ) : currentView === 'register' ? (
         <>
-          <Register onBackToHome={handleBackToHome} />
+          <Register onBackToHome={handleBackToHome} onGoToLogin={handleNavigateToLogin} />
           <Footer/>
         </>
       ) : (
