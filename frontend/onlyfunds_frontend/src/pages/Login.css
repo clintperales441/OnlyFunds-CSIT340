@@ -1,7 +1,7 @@
 /* src/pages/Login.css */
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #5841f1 0%, #2D2A6D 100%);
+  background: linear-gradient(135deg, #5841f1 0%, #2d2a6d 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,12 +37,12 @@
 }
 
 .back-link-button:hover {
-  color: #2D2A6D;
+  color: #2d2a6d;
 }
 
 /* Left Side - Branding */
 .login-left {
-  background: linear-gradient(135deg, #2D2A6D 0%, #1a1741 100%);
+  background: linear-gradient(135deg, #2d2a6d 0%, #1a1741 100%);
   color: white;
   padding: 60px 50px;
   display: flex;
@@ -58,7 +58,7 @@
 }
 
 .brand-section .logo span {
-  color: #C6BEFA;
+  color: #c6befa;
 }
 
 .brand-section h2 {
@@ -99,7 +99,7 @@
   justify-content: center;
   font-size: 1rem;
   font-weight: 700;
-  color: #C6BEFA;
+  color: #c6befa;
   flex-shrink: 0;
 }
 
@@ -143,7 +143,7 @@
 
 .form-header h2 {
   font-size: 2rem;
-  color: #2D2A6D;
+  color: #2d2a6d;
   margin-bottom: 10px;
   font-weight: 700;
 }
@@ -162,7 +162,7 @@
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #2D2A6D;
+  color: #2d2a6d;
   font-weight: 600;
   font-size: 0.95rem;
 }
@@ -181,7 +181,7 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #C6BEFA;
+  border-color: #c6befa;
   box-shadow: 0 0 0 3px rgba(198, 190, 250, 0.1);
 }
 
@@ -220,7 +220,7 @@
 }
 
 .toggle-password:hover {
-  color: #2D2A6D;
+  color: #2d2a6d;
 }
 
 /* Form Options */
@@ -258,7 +258,7 @@
 }
 
 .forgot-link:hover {
-  color: #2D2A6D;
+  color: #2d2a6d;
   text-decoration: underline;
 }
 
@@ -266,7 +266,7 @@
 .login-button {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #2D2A6D 0%, #5841f1 100%);
+  background: linear-gradient(135deg, #2d2a6d 0%, #5841f1 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -294,7 +294,7 @@
 }
 
 .divider::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;
@@ -335,7 +335,7 @@
 }
 
 .social-button:hover {
-  border-color: #C6BEFA;
+  border-color: #c6befa;
   background: #f9f8ff;
 }
 
@@ -355,7 +355,7 @@
 }
 
 .social-button.google .social-icon {
-  background: #DB4437;
+  background: #db4437;
   color: white;
 }
 
@@ -364,7 +364,7 @@
 }
 
 .social-button.facebook .social-icon {
-  background: #4267B2;
+  background: #4267b2;
   color: white;
 }
 

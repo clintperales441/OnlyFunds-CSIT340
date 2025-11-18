@@ -12,24 +12,20 @@
 
 .scroll-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #C6BEFA 0%, #8b7ff5 50%, #2D2A6D 100%);
+  background: linear-gradient(90deg, #c6befa 0%, #8b7ff5 50%, #2d2a6d 100%);
   transition: width 0.1s ease-out;
   box-shadow: 0 0 10px rgba(198, 190, 250, 0.5);
   position: relative;
 }
 
 .scroll-progress-bar::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0;
   top: 0;
   width: 30px;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.4)
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
   animation: shimmer-progress 1.5s infinite;
 }
 
@@ -78,13 +74,13 @@
 .temp-logo {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #2D2A6D;
+  color: #2d2a6d;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .temp-logo span {
-  color: #C6BEFA;
+  color: #c6befa;
 }
 
 .temp-logo:hover {
@@ -97,7 +93,7 @@
 }
 
 .temp-nav-links a {
-  color: #2D2A6D;
+  color: #2d2a6d;
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
@@ -107,13 +103,13 @@
 }
 
 .temp-nav-links a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #C6BEFA;
+  background-color: #c6befa;
   transition: width 0.3s ease;
 }
 
@@ -126,7 +122,7 @@
 }
 
 .temp-login-btn {
-  color: #2D2A6D;
+  color: #2d2a6d;
   background: transparent;
   border: none;
   text-decoration: none;
@@ -139,13 +135,13 @@
 }
 
 .temp-login-btn::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #C6BEFA;
+  background-color: #c6befa;
   transition: width 0.3s ease;
 }
 
@@ -158,7 +154,7 @@
 }
 
 .temp-register-btn {
-  color: #2D2A6D;
+  color: #2d2a6d;
   background: transparent;
   border: none;
   text-decoration: none;
@@ -171,13 +167,13 @@
 }
 
 .temp-register-btn::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #C6BEFA;
+  background-color: #c6befa;
   transition: width 0.3s ease;
 }
 
@@ -190,7 +186,7 @@
 }
 
 .temp-donate-btn {
-  background-color: #2D2A6D;
+  background-color: #2d2a6d;
   color: white;
   border: none;
   padding: 10px 25px;
@@ -214,7 +210,7 @@
   right: 30px;
   width: 50px;
   height: 50px;
-  background-color: #2D2A6D;
+  background-color: #2d2a6d;
   color: white;
   border: none;
   border-radius: 50%;
