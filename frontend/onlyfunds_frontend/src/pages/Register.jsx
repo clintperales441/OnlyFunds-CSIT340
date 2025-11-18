@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './Register.css';
 
-// Accept the new prop for login navigation!
-const Register = ({ onBackToHome, onGoToLogin }) => {
+// Accept onRegister callback for data persistence
+const Register = ({ onBackToHome, onRegister }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
+    gender: '',
+    age: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -37,6 +39,16 @@ const Register = ({ onBackToHome, onGoToLogin }) => {
       newErrors.lastName = 'Last name is required';
     }
 
+    if (!formData.gender) {
+      newErrors.gender = 'Please select a gender';
+    }
+
+    if (!formData.age) {
+      newErrors.age = 'Age is required';
+    } else if (parseInt(formData.age) < 1 || parseInt(formData.age) > 120) {
+      newErrors.age = 'Enter a valid age';
+    }
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -63,10 +75,9 @@ const Register = ({ onBackToHome, onGoToLogin }) => {
 
   const handleSubmit = () => {
     if (validateForm()) {
-      console.log('Form submitted:', formData);
-      alert('Registration successful! (Frontend only - no backend yet)');
-      if (onGoToLogin) {
-        onGoToLogin(); // Redirects to login page after registration
+      // Pass all user data to parent for proper login
+      if (onRegister) {
+        onRegister({ ...formData });
       }
     }
   };
@@ -115,6 +126,8 @@ const Register = ({ onBackToHome, onGoToLogin }) => {
             <p className="subtitle">Fill in your details to get started</p>
 
             <div className="register-form">
+
+              {/* Account Type Selector */}
               <div className="account-type-selector">
                 <label className={`type-option ${formData.accountType === 'donor' ? 'active' : ''}`}>
                   <input
@@ -139,6 +152,7 @@ const Register = ({ onBackToHome, onGoToLogin }) => {
                 </label>
               </div>
 
+              {/* First and Last name */}
               <div className="form-row">
                 <div className="form-group">
                   <label>First Name</label>
@@ -167,6 +181,41 @@ const Register = ({ onBackToHome, onGoToLogin }) => {
                 </div>
               </div>
 
+              {/* Gender and Age */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Gender</label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className={errors.gender ? 'error' : ''}
+                  >
+                    <option value="">Select...</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="prefer_not_to_say">Prefer not to say</option>
+                    <option value="other">Other</option>
+                  </select>
+                  {errors.gender && <span className="error-message">{errors.gender}</span>}
+                </div>
+                <div className="form-group">
+                  <label>Age</label>
+                  <input
+                    type="number"
+                    name="age"
+                    min="1"
+                    max="120"
+                    value={formData.age}
+                    onChange={handleChange}
+                    className={errors.age ? 'error' : ''}
+                    placeholder="Age"
+                  />
+                  {errors.age && <span className="error-message">{errors.age}</span>}
+                </div>
+              </div>
+
+              {/* Email */}
               <div className="form-group">
                 <label>Email Address</label>
                 <input
@@ -180,6 +229,7 @@ const Register = ({ onBackToHome, onGoToLogin }) => {
                 {errors.email && <span className="error-message">{errors.email}</span>}
               </div>
 
+              {/* Password */}
               <div className="form-group">
                 <label>Password</label>
                 <input
@@ -193,6 +243,7 @@ const Register = ({ onBackToHome, onGoToLogin }) => {
                 {errors.password && <span className="error-message">{errors.password}</span>}
               </div>
 
+              {/* Confirm Password */}
               <div className="form-group">
                 <label>Confirm Password</label>
                 <input
@@ -206,6 +257,7 @@ const Register = ({ onBackToHome, onGoToLogin }) => {
                 {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
               </div>
 
+              {/* Agree Terms */}
               <div className="form-group checkbox-group">
                 <label className="checkbox-label">
                   <input
@@ -224,7 +276,7 @@ const Register = ({ onBackToHome, onGoToLogin }) => {
               </button>
 
               <div className="login-link">
-                Already have an account? <a href="#login">Log in here</a>
+                Already have an account? <a href="#login" onClick={(e) => { e.preventDefault(); onRegister && onRegister({ goToLogin: true }); }}>Log in here</a>
               </div>
             </div>
           </div>

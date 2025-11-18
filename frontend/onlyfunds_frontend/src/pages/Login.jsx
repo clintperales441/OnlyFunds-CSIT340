@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-const Login = ({ onBackToHome, onLogin }) => {
+const Login = ({ onBackToHome, onLogin, onNavigateToRegister }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -40,19 +40,8 @@ const Login = ({ onBackToHome, onLogin }) => {
   };
 
   const handleSubmit = () => {
-    if (validateForm()) {
-      console.log('Login submitted:', formData);
-      alert('Login successful! (Frontend only - no backend yet)');
-
-      // "Get" firstName from email for this demo
-      const firstName = formData.email.split('@')[0] || "User";
-
-      // Call the parent handler to log in (update App state)
-      if (onLogin) {
-        onLogin({ firstName });
-      }
-
-      // Optionally: onBackToHome();
+    if (validateForm() && onLogin) {
+      onLogin({ email: formData.email, password: formData.password });
     }
   };
 
@@ -182,7 +171,16 @@ const Login = ({ onBackToHome, onLogin }) => {
               </div>
 
               <div className="register-link">
-                Don't have an account? <a href="#register">Create one here</a>
+                Don't have an account?{" "}
+                <a
+                  href="#register"
+                  onClick={e => {
+                    e.preventDefault();
+                    onNavigateToRegister && onNavigateToRegister();
+                  }}
+                >
+                  Create one here
+                </a>
               </div>
             </div>
           </div>

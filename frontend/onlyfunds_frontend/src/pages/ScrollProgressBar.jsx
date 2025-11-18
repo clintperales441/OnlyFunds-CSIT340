@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './ScrollProgressBar.css';
 
-// Accepts all needed props for both auth and nav
 const ScrollProgressBar = ({
   onNavigateToLogin,
   onNavigateToRegister,
-  onNavigateToProfile, // optional
+  onNavigateToProfile,
   onNavigateToHome,
   currentUser,
-  onLogout
+  onLogout,
+  onNavigateToAbout,
+  onNavigateToCampaigns,
+  onNavigateToDonate,
+  onNavigateToContact,
 }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showNavbar, setShowNavbar] = useState(false);
@@ -23,17 +26,11 @@ const ScrollProgressBar = ({
     };
 
     window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -45,35 +42,35 @@ const ScrollProgressBar = ({
           style={{ width: `${scrollProgress}%` }}
         ></div>
       </div>
-
-      {/* Navbar */}
       <nav className={`temp-navbar ${showNavbar ? 'visible' : ''}`}>
         <div className="temp-navbar-content">
           <div className="temp-nav-links" style={{ flex: 1 }}>
-            <a href="#about">About</a>
-            <a href="#campaigns">Campaigns</a>
-            <a href="#donate">Donate</a>
-            <a href="#contact">Contact</a>
+            <button className="nav-link-btn" onClick={onNavigateToAbout}>About</button>
+            <button className="nav-link-btn" onClick={onNavigateToCampaigns}>Campaigns</button>
+            <button className="nav-link-btn" onClick={onNavigateToDonate}>Donate</button>
+            <button className="nav-link-btn" onClick={onNavigateToContact}>Contact</button>
           </div>
-          {/* User area always at right */}
-          <div className="temp-nav-user-area" style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+          <div className="temp-nav-user-area">
             {currentUser ? (
               <div className="navbar-user-pill">
-                <span className="navbar-user-avatar">
-                  <svg width="24" height="24" fill="#7957fa" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z"/></svg>
+                <button
+                  className="navbar-user-avatar-btn"
+                  onClick={onNavigateToProfile}
+                  title="Profile"
+                  aria-label="Go to profile"
+                >
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="10" r="6" fill="#a094f4"/>
+                    <ellipse cx="12" cy="19" rx="7" ry="3.5" fill="#a094f4"/>
+                  </svg>
+                </button>
+                <span className="navbar-user-name">
+                  {currentUser.firstName}
                 </span>
-                <span className="navbar-user-name">{currentUser.firstName || currentUser.email}</span>
-                {/* Profile Button if needed */}
-                {typeof onNavigateToProfile === "function" && (
-                  <button className="navbar-profile-btn" onClick={onNavigateToProfile} title="Profile">
-                    <svg width="22" height="22" fill="#888" viewBox="0 0 24 24">
-                      <circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z"/>
-                    </svg>
-                  </button>
-                )}
-                <button className="navbar-logout-icon" onClick={onLogout} title="Log out">
+                <button className="navbar-logout-icon" onClick={onLogout} title="Log out" aria-label="Log out">
                   <svg height="22" width="22" fill="#888" viewBox="0 0 24 24">
-                    <path d="M16 13v-2H7V8l-5 4 5 4v-3h9z"/><path d="M20 3H12c-1.1 0-2 .9-2 2v4h2V5h8v14h-8v-4h-2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                    <path d="M16 13v-2H7V8l-5 4 5 4v-3h9z"/>
+                    <path d="M20 3H12c-1.1 0-2 .9-2 2v4h2V5h8v14h-8v-4h-2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
                   </svg>
                 </button>
               </div>
@@ -86,8 +83,6 @@ const ScrollProgressBar = ({
           </div>
         </div>
       </nav>
-
-      {/* Scroll to Top Button */}
       <button
         className={`scroll-to-top ${showNavbar ? 'visible' : ''}`}
         onClick={scrollToTop}
