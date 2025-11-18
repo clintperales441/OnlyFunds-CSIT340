@@ -43,7 +43,7 @@
   }
 }
 
-/* Temporary Navbar */
+/* Navbar Styles */
 .temp-navbar {
   position: fixed;
   top: 0;
@@ -63,9 +63,9 @@
 }
 
 .temp-navbar-content {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 40px; /* Increased for better right-side spacing */
+  padding: 0 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -91,6 +91,7 @@
   display: flex;
   gap: 30px;
   align-items: center;
+  flex: 1;
 }
 
 .temp-nav-links a {
@@ -122,6 +123,81 @@
   width: 100%;
 }
 
+/* User Area */
+.temp-nav-user-area {
+  display: flex;
+  align-items: center;
+  margin-left: 32px;
+}
+
+.navbar-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f6f3ff;
+  border-radius: 999px;
+  padding: 8px 36px 8px 16px;
+  box-shadow: 0 1px 6px rgba(120,70,246,0.06);
+  font-size: 1.08rem;
+}
+
+.navbar-user-avatar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: 50%;
+  padding: 0;
+  margin-right: 2px;
+}
+
+.navbar-user-avatar-btn:focus, .navbar-user-avatar-btn:hover {
+  background: #e1dbfa;
+}
+
+.navbar-user-avatar {
+  background: #e1dbfa;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2px;
+}
+
+.navbar-user-name {
+  font-weight: 700;
+  color: #332f68;
+  white-space: nowrap;
+  font-size: 1.06rem;
+  margin-right: 2px;
+}
+
+.navbar-logout-icon {
+  background: none;
+  border: none;
+  margin-left: 8px;
+  outline: none;
+  cursor: pointer;
+  padding: 0 1px;
+  transition: color 0.17s;
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+}
+.navbar-logout-icon svg {
+  vertical-align: middle;
+}
+.navbar-logout-icon:hover svg {
+  fill: #e65454;
+  opacity: 1;
+}
+
 .temp-login-btn {
   color: #2D2A6D;
   background: transparent;
@@ -149,7 +225,6 @@
 .temp-login-btn:hover {
   color: #5841f1;
 }
-
 .temp-login-btn:hover::after {
   width: 100%;
 }
@@ -166,7 +241,6 @@
   padding: 5px 0;
   cursor: pointer;
 }
-
 .temp-register-btn::after {
   content: '';
   position: absolute;
@@ -177,44 +251,10 @@
   background-color: #C6BEFA;
   transition: width 0.3s ease;
 }
-
 .temp-register-btn:hover {
   color: #5841f1;
 }
-
 .temp-register-btn:hover::after {
-  width: 100%;
-}
-
-.temp-profile-btn {
-  color: #2D2A6D;
-  background: transparent;
-  border: none;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  position: relative;
-  padding: 5px 0;
-  cursor: pointer;
-}
-
-.temp-profile-btn::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: #C6BEFA;
-  transition: width 0.3s ease;
-}
-
-.temp-profile-btn:hover {
-  color: #5841f1;
-}
-
-.temp-profile-btn:hover::after {
   width: 100%;
 }
 
@@ -229,7 +269,6 @@
   transition: all 0.3s ease;
   font-weight: 600;
 }
-
 .temp-donate-btn:hover {
   background-color: #1a1741;
   transform: translateY(-2px);
@@ -274,110 +313,68 @@
 .scroll-to-top svg {
   transition: transform 0.3s ease;
 }
-
 .scroll-to-top:hover svg {
   transform: translateY(-3px);
 }
 
-.navbar-user-pill {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #f6f3ff;
-  border-radius: 999px;
-  padding: 7px 24px 7px 14px;
-  box-shadow: 0 1px 4px rgba(89,70,246,0.04);
-  margin-left: 32px;
-  font-size: 1rem;
-}
-
-.navbar-user-avatar {
-  background: #e1dbfa;
-  border-radius: 50%;
-  width: 33px;
-  height: 33px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 2px;
-}
-
-.navbar-user-name {
-  font-weight: 600;
-  color: #332f68;
-  margin: 0 2px 0 0;
-  white-space: nowrap;
-}
-
-.navbar-logout-icon {
-  background: none;
-  border: none;
-  margin-left: 6px;
-  outline: none;
-  cursor: pointer;
-  padding: 0 2px;
-  transition: color 0.15s;
-}
-.navbar-logout-icon svg {
-  vertical-align: middle;
-}
-.navbar-logout-icon:hover svg {
-  fill: #e65454;
-}
-
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .temp-navbar-content {
-    padding: 0 18px;
+    padding: 0 22px;
   }
   .navbar-user-pill {
-    padding: 6px 12px;
-    margin-left: 12px;
-    font-size: 0.96rem;
-  }
-  .temp-nav-links {
-    gap: 16px;
+    padding: 7px 18px 7px 10px;
+    gap: 10px;
   }
 }
-
+@media (max-width: 900px) {
+  .temp-navbar-content {
+    padding: 0 8px;
+  }
+  .navbar-user-pill {
+    padding: 5px 8px 5px 8px;
+    font-size: 0.98rem;
+  }
+}
+@media (max-width: 700px) {
+  .temp-navbar-content {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .temp-nav-user-area {
+    justify-content: center;
+    margin-left: 0;
+  }
+  .navbar-user-pill {
+    margin: 0 auto;
+  }
+}
 @media (max-width: 768px) {
   .temp-navbar-content {
     flex-wrap: wrap;
     gap: 15px;
     padding: 0 8px;
   }
-
   .temp-nav-links {
     gap: 15px;
     order: 3;
     width: 100%;
     justify-content: center;
   }
-
   .temp-nav-links a {
     font-size: 0.9rem;
   }
-
-  .temp-login-btn {
-    font-size: 0.9rem;
-  }
-
+  .temp-login-btn,
   .temp-register-btn {
     font-size: 0.9rem;
   }
-
-  .temp-profile-btn {
-    font-size: 0.9rem;
-  }
-
   .temp-logo {
     font-size: 1.5rem;
   }
-
   .temp-donate-btn {
     padding: 8px 20px;
     font-size: 0.9rem;
   }
-
   .scroll-to-top {
     width: 45px;
     height: 45px;
@@ -385,26 +382,36 @@
     right: 20px;
   }
 }
-
 @media (max-width: 480px) {
   .temp-nav-links {
     gap: 10px;
     flex-wrap: wrap;
   }
-
-  .temp-nav-links a {
-    font-size: 0.85rem;
-  }
-
-  .temp-login-btn {
-    font-size: 0.85rem;
-  }
-
+  .temp-nav-links a,
+  .temp-login-btn,
   .temp-register-btn {
     font-size: 0.85rem;
   }
+}
 
-  .temp-profile-btn {
-    font-size: 0.85rem;
-  }
+.temp-nav-user-area {
+  display: flex;
+  align-items: center;
+  margin-left: 32px;
+  gap: 16px; 
+}
+
+.nav-link-btn {
+  background: none;
+  border: none;
+  color: #2D2A6D;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 5px 0;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+.nav-link-btn:hover {
+  color: #5841f1;
 }
