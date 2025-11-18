@@ -6,6 +6,7 @@ import Campaign from './pages/Campaign';
 import CreateCampaign from './pages/CreateCampaign';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
 import Footer from './pages/Footer';
 import About from './pages/About';
 
@@ -33,6 +34,11 @@ function App() {
 
   const handleNavigateToRegister = () => {
     setCurrentView('register');
+    window.scrollTo(0, 0);
+  };
+
+  const handleNavigateToProfile = () => {
+    setCurrentView('profile');
     window.scrollTo(0, 0);
   };
 
@@ -71,6 +77,7 @@ function App() {
         onLogout={handleLogout}
         onNavigateToLogin={handleNavigateToLogin}
         onNavigateToRegister={handleNavigateToRegister}
+        onNavigateToProfile={handleNavigateToProfile}
         onNavigateToHome={handleBackToHome}
       />
       {currentView === 'home' ? (
@@ -93,6 +100,11 @@ function App() {
       ) : currentView === 'register' ? (
         <>
           <Register onBackToHome={handleBackToHome} onGoToLogin={handleNavigateToLogin} />
+          <Footer/>
+        </>
+      ) : currentView === 'profile' ? (
+        <>
+          <Profile onBackToHome={handleBackToHome} />
           <Footer/>
         </>
       ) : (

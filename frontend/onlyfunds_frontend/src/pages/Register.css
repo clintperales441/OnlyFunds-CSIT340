@@ -1,7 +1,7 @@
 /* src/pages/Register.css */
 .register-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #2D2A6D 0%, #1a1741 100%);
+  background: linear-gradient(135deg, #2d2a6d 0%, #1a1741 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,12 +37,12 @@
 }
 
 .back-link-button:hover {
-  color: #2D2A6D;
+  color: #2d2a6d;
 }
 
 /* Left Side - Branding */
 .register-left {
-  background: linear-gradient(135deg, #2D2A6D 0%, #5841f1 100%);
+  background: linear-gradient(135deg, #2d2a6d 0%, #5841f1 100%);
   color: white;
   padding: 60px 50px;
   display: flex;
@@ -58,7 +58,7 @@
 }
 
 .brand-section .logo span {
-  color: #C6BEFA;
+  color: #c6befa;
 }
 
 .brand-section h2 {
@@ -126,7 +126,7 @@
 
 .form-wrapper h2 {
   font-size: 2rem;
-  color: #2D2A6D;
+  color: #2d2a6d;
   margin-bottom: 10px;
   font-weight: 700;
 }
@@ -168,17 +168,17 @@
 }
 
 .type-option.active {
-  border-color: #C6BEFA;
+  border-color: #c6befa;
   background: #f9f8ff;
 }
 
 .type-option.active span {
-  color: #2D2A6D;
+  color: #2d2a6d;
   font-weight: 600;
 }
 
 .type-option:hover {
-  border-color: #C6BEFA;
+  border-color: #c6befa;
 }
 
 /* Form Groups */
@@ -195,7 +195,7 @@
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #2D2A6D;
+  color: #2d2a6d;
   font-weight: 600;
   font-size: 0.95rem;
 }
@@ -214,7 +214,7 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #C6BEFA;
+  border-color: #c6befa;
   box-shadow: 0 0 0 3px rgba(198, 190, 250, 0.1);
 }
 
@@ -268,7 +268,7 @@
 .register-button {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #2D2A6D 0%, #5841f1 100%);
+  background: linear-gradient(135deg, #2d2a6d 0%, #5841f1 100%);
   color: white;
   border: none;
   border-radius: 8px;
