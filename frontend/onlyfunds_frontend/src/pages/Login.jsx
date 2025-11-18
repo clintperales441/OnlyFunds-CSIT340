@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-const Login = ({ onBackToHome }) => {
+const Login = ({ onBackToHome, onLogin }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -43,7 +43,16 @@ const Login = ({ onBackToHome }) => {
     if (validateForm()) {
       console.log('Login submitted:', formData);
       alert('Login successful! (Frontend only - no backend yet)');
-      onBackToHome();
+
+      // "Get" firstName from email for this demo
+      const firstName = formData.email.split('@')[0] || "User";
+
+      // Call the parent handler to log in (update App state)
+      if (onLogin) {
+        onLogin({ firstName });
+      }
+
+      // Optionally: onBackToHome();
     }
   };
 
