@@ -1,0 +1,13 @@
+package com.onlyfunds.backend;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class OnlyfundsBackendApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(OnlyfundsBackendApplication.class, args);
+	}
+
+}
