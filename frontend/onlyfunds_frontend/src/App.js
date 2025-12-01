@@ -24,10 +24,32 @@ function App() {
   const contactRef = useRef(null);
 
   const handleScrollToSection = (ref) => {
-    setCurrentView('home');
-    setTimeout(() => {
+    if (currentView !== 'home') {
+      // Navigate to home first, then scroll
+      setCurrentView('home');
+      setTimeout(() => {
+        ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    } else {
+      // Already on home, just scroll
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+    }
+  };
+
+  const handleNavigateToAbout = () => {
+    handleScrollToSection(aboutRef);
+  };
+
+  const handleNavigateToCampaigns = () => {
+    handleScrollToSection(campaignsRef);
+  };
+
+  const handleNavigateToDonate = () => {
+    handleScrollToSection(donateRef);
+  };
+
+  const handleNavigateToContact = () => {
+    handleScrollToSection(contactRef);
   };
 
   const handleNavigateToCampaign = (campaignId) => {
@@ -70,25 +92,26 @@ function App() {
     window.scrollTo(0, 0);
   };
 
-  // Save user on register, then go to login view
+  // Save user on register, then redirect to login page
   const handleRegister = (userObj) => {
+    // Check if user wants to go to login (from "Already have account?" link)
+    if (userObj.goToLogin) {
+      setCurrentView('login');
+      window.scrollTo(0, 0);
+      return;
+    }
+    
+    // Registration successful - save user and redirect to login page
     setRegisteredUsers(prev => [...prev, userObj]);
     setCurrentView('login');
     window.scrollTo(0, 0);
   };
 
-  // Find user by email/password, set as currentUser on login
-  const handleLogin = ({ email, password }) => {
-    const found = registeredUsers.find(
-      u => u.email === email && u.password === password
-    );
-    if (found) {
-      setCurrentUser(found);
-      setCurrentView('home');
-      window.scrollTo(0, 0);
-    } else {
-      alert('Incorrect email or password.\nIf new user, please register first.');
-    }
+  // Handle login - receive user data from Login component (after API call)
+  const handleLogin = (userData) => {
+    setCurrentUser(userData);
+    setCurrentView('home');
+    window.scrollTo(0, 0);
   };
 
   const handleLogout = () => {
@@ -106,16 +129,16 @@ function App() {
         onNavigateToRegister={handleNavigateToRegister}
         onNavigateToProfile={handleNavigateToProfile}
         onNavigateToHome={handleBackToHome}
-        onNavigateToAbout={() => handleScrollToSection(aboutRef)}
-        onNavigateToCampaigns={() => handleScrollToSection(campaignsRef)}
-        onNavigateToDonate={() => handleScrollToSection(donateRef)}
-        onNavigateToContact={() => handleScrollToSection(contactRef)}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToCampaigns={handleNavigateToCampaigns}
+        onNavigateToDonate={handleNavigateToDonate}
+        onNavigateToContact={handleNavigateToContact}
       />
       {currentView === 'home' ? (
         <>
-          <Homepage ref={campaignsRef} onNavigateToCampaign={handleNavigateToCampaign} onNavigateToCreate={handleNavigateToCreate} />
+          <Homepage ref={campaignsRef} onNavigateToCampaign={handleNavigateToCampaign} onNavigateToCreate={handleNavigateToCreate} onNavigateToDonate={handleNavigateToDonate} />
           <DonationCarousel ref={donateRef} onNavigateToCampaign={handleNavigateToCampaign} />
-          <About ref={aboutRef} />
+          <About ref={aboutRef} onNavigateToDonate={handleNavigateToDonate} />
           <Footer ref={contactRef}/>
         </>
       ) : currentView === 'create' ? (
@@ -137,6 +160,7 @@ function App() {
           <Register
             onBackToHome={handleBackToHome}
             onRegister={handleRegister}
+            onNavigateToLogin={handleNavigateToLogin}
           />
           <Footer/>
         </>

@@ -1,6 +1,7 @@
 package com.onlyfunds.backend.service;
 
 import com.onlyfunds.backend.dto.DonationCreateDTO;
+import com.onlyfunds.backend.dto.DonationResponseDTO;
 import com.onlyfunds.backend.entity.*;
 import com.onlyfunds.backend.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +57,9 @@ public class DonationService {
         CardNumber cardNumber = new CardNumber();
         cardNumber.setDonation(savedDonation);
         cardNumber.setName(dto.getCardName());
-        cardNumber.setExpiry(LocalDate.parse(dto.getCardExpiry(), DateTimeFormatter.ofPattern("MM/yy")));
+        // Parse MM/yy format and set to last day of that month
+        java.time.YearMonth yearMonth = java.time.YearMonth.parse(dto.getCardExpiry(), DateTimeFormatter.ofPattern("MM/yy"));
+        cardNumber.setExpiry(yearMonth.atEndOfMonth());
         cardNumber.setCvc(dto.getCardCvc());
         savedDonation.setCardNumber(cardNumber);
         
@@ -75,5 +80,27 @@ public class DonationService {
         campaignInfoRepository.save(campaignInfo);
         
         return savedReceipt.getReceiptId();
+    }
+    
+    public List<DonationResponseDTO> getUserDonations(String userId) {
+        List<Donation> donations = donationRepository.findByUser_UserId(userId);
+        
+        return donations.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+    
+    private DonationResponseDTO mapToDTO(Donation donation) {
+        DonationResponseDTO dto = new DonationResponseDTO();
+        dto.setReceiptId(donation.getReceipt().getReceiptId());
+        dto.setCampaignId(donation.getCampaign().getCampaignId());
+        dto.setCampaignTitle(donation.getCampaign().getCampaignTitle());
+        dto.setAmount(donation.getReceipt().getAmount());
+        dto.setDate(donation.getReceipt().getDate());
+        dto.setPaymentMethod(donation.getPaymentMethod().toString());
+        dto.setDonorFirstName(donation.getDonorInfo().getFirstName());
+        dto.setDonorLastName(donation.getDonorInfo().getLastName());
+        dto.setDonorEmail(donation.getDonorInfo().getEmail());
+        return dto;
     }
 }

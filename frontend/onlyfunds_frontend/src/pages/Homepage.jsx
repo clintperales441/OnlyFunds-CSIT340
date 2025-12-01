@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import './Homepage.css';
+import { campaignService } from '../services/campaignService';
 
 // Import your actual images directly from the assets folder
 import petDonation from '../assets/images/pet-donation.jpg';
@@ -8,7 +9,12 @@ import educationFund from '../assets/images/education-fund.jpg';
 import healthSupport from '../assets/images/health-support.jpg';
 import communityHelp from '../assets/images/community-help.jpg';
 
-const Homepage = ({ onNavigateToCampaign, onNavigateToCreate }) => {
+const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavigateToDonate }, ref) => {
+  const [campaigns, setCampaigns] = useState([]);
+  const [loadingCampaigns, setLoadingCampaigns] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [filteredCampaigns, setFilteredCampaigns] = useState([]);
+  
   // Array of your actual imported images
   const backgroundImages = [
     petDonation,
@@ -21,6 +27,62 @@ const Homepage = ({ onNavigateToCampaign, onNavigateToCreate }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  // Category options with icons
+  const categories = [
+    { id: 'all', name: 'All Causes', icon: '🌟' },
+    { id: '1', name: 'Education', icon: '📚' },
+    { id: '2', name: 'Healthcare', icon: '🏥' },
+    { id: '3', name: 'Animal Welfare', icon: '🐾' },
+    { id: '4', name: 'Community', icon: '🏘️' },
+    { id: '5', name: 'Environment', icon: '🌱' },
+  ];
+
+  // Fetch campaigns from backend
+  useEffect(() => {
+    const loadCampaigns = async () => {
+      try {
+        const data = await campaignService.getAllCampaigns();
+        setCampaigns(data);
+        setFilteredCampaigns(data.slice(0, 6)); // Show first 6 campaigns initially
+      } catch (error) {
+        console.error('Failed to load campaigns:', error);
+        // Keep empty array on error
+      } finally {
+        setLoadingCampaigns(false);
+      }
+    };
+    loadCampaigns();
+
+    // Real-time polling for campaign updates
+    const pollInterval = setInterval(async () => {
+      try {
+        const data = await campaignService.getAllCampaigns();
+        setCampaigns(data);
+        // Re-filter based on current category
+        filterCampaignsByCategory(data, selectedCategory);
+      } catch (error) {
+        console.error('Failed to poll campaigns:', error);
+      }
+    }, 10000); // Poll every 10 seconds
+
+    return () => clearInterval(pollInterval);
+  }, []);
+
+  // Filter campaigns by category
+  const filterCampaignsByCategory = (campaignList, categoryId) => {
+    if (categoryId === 'all') {
+      setFilteredCampaigns(campaignList.slice(0, 6));
+    } else {
+      const filtered = campaignList.filter(c => String(c.categoryId) === String(categoryId));
+      setFilteredCampaigns(filtered.slice(0, 6));
+    }
+  };
+
+  // Handle category change
+  useEffect(() => {
+    filterCampaignsByCategory(campaigns, selectedCategory);
+  }, [selectedCategory, campaigns]);
 
   // Function to rotate background images
   useEffect(() => {
@@ -78,76 +140,80 @@ const Homepage = ({ onNavigateToCampaign, onNavigateToCreate }) => {
               Your contributions create real change where it's needed most.
             </p>
             <div className="cta-buttons">
-              <button className="donate-button">Donate Now</button>
+              <button className="donate-button" onClick={onNavigateToDonate}>Donate Now</button>
               <button className="create-button" onClick={onNavigateToCreate}>Create Campaign</button>
             </div>
           </div>
         </main>
       </div>
 
-      <section className="campaign-section">
+      <section className="campaign-section" ref={ref}>
         <div className="section-header">
           <h3>Featured Campaigns</h3>
           <p>Help make a difference in these critical initiatives</p>
         </div>
-        <div className="campaign-grid">
-          <div className="campaign-card">
-            <div className="campaign-image">
-              <div className="placeholder" style={{ background: '#f8f7ff', color: '#8b80f9' }}>Pet Rescue Initiative</div>
-            </div>
-            <div className="campaign-details">
-              <h4>Emergency Pet Shelter Support</h4>
-              <div className="progress-container">
-                <div className="progress-bar small">
-                  <div className="progress" style={{ width: '78%' }}></div>
-                </div>
-                <div className="progress-info">
-                  <span>78% funded</span>
-                  <span>$24,580 raised</span>
-                </div>
-              </div>
-              <button className="view-campaign-btn" onClick={() => onNavigateToCampaign(1)}>View Campaign</button>
-            </div>
-          </div>
-          
-          <div className="campaign-card">
-            <div className="campaign-image">
-              <div className="placeholder" style={{ background: '#f1efff', color: '#7d70f7' }}>Children's Education</div>
-            </div>
-            <div className="campaign-details">
-              <h4>Books for Underprivileged Schools</h4>
-              <div className="progress-container">
-                <div className="progress-bar small">
-                  <div className="progress" style={{ width: '62%' }}></div>
-                </div>
-                <div className="progress-info">
-                  <span>62% funded</span>
-                  <span>$18,750 raised</span>
-                </div>
-              </div>
-              <button className="view-campaign-btn" onClick={() => onNavigateToCampaign(2)}>View Campaign</button>
-            </div>
-          </div>
-          
-          <div className="campaign-card">
-            <div className="campaign-image">
-              <div className="placeholder" style={{ background: '#eae7ff', color: '#7161f5' }}>Healthcare Support</div>
-            </div>
-            <div className="campaign-details">
-              <h4>Medical Supplies for Rural Clinics</h4>
-              <div className="progress-container">
-                <div className="progress-bar small">
-                  <div className="progress" style={{ width: '85%' }}></div>
-                </div>
-                <div className="progress-info">
-                  <span>85% funded</span>
-                  <span>$42,350 raised</span>
-                </div>
-              </div>
-              <button className="view-campaign-btn" onClick={() => onNavigateToCampaign(3)}>View Campaign</button>
-            </div>
-          </div>
+
+        {/* Category Filter Tabs */}
+        <div className="category-filter">
+          {categories.map(cat => (
+            <button
+              key={cat.id}
+              className={`category-tab ${selectedCategory === cat.id ? 'active' : ''}`}
+              onClick={() => setSelectedCategory(cat.id)}
+            >
+              <span className="category-icon">{cat.icon}</span>
+              <span className="category-name">{cat.name}</span>
+            </button>
+          ))}
         </div>
+
+        {loadingCampaigns ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+            Loading campaigns...
+          </div>
+        ) : filteredCampaigns.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+            No campaigns found in this category. Be the first to create one!
+          </div>
+        ) : (
+          <div className="campaign-grid">
+            {filteredCampaigns.map(campaign => {
+              const progressPercent = campaign.goal > 0 ? Math.round((campaign.raised / campaign.goal) * 100) : 0;
+              return (
+                <div key={campaign.campaignId} className="campaign-card">
+                  <div className="campaign-image">
+                    {campaign.imageUrl ? (
+                      <img src={campaign.imageUrl} alt={campaign.campaignTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <div className="placeholder" style={{ background: '#f8f7ff', color: '#8b80f9' }}>
+                        {campaign.campaignTitle}
+                      </div>
+                    )}
+                    <span className="campaign-category-badge">{campaign.categoryName || 'General'}</span>
+                  </div>
+                  <div className="campaign-details">
+                    <h4>{campaign.campaignTitle}</h4>
+                    <div className="progress-container">
+                      <div className="progress-bar small">
+                        <div className="progress" style={{ width: `${progressPercent}%` }}></div>
+                      </div>
+                      <div className="progress-info">
+                        <span>{progressPercent}% funded</span>
+                        <span>${campaign.raised?.toLocaleString() || '0'} raised</span>
+                      </div>
+                    </div>
+                    <button 
+                      className="view-campaign-btn" 
+                      onClick={() => onNavigateToCampaign(campaign.campaignId)}
+                    >
+                      View Campaign
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <section className="stats-section">
@@ -194,6 +260,8 @@ const Homepage = ({ onNavigateToCampaign, onNavigateToCreate }) => {
       </section>
     </div>
   );
-};
+});
+
+Homepage.displayName = 'Homepage';
 
 export default Homepage;

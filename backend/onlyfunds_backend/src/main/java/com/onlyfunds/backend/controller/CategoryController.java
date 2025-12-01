@@ -43,4 +43,27 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+    
+    @PostMapping("/initialize")
+    public ResponseEntity<String> initializeDefaultCategories() {
+        try {
+            String[] categories = {"Education", "Health", "Animal Welfare", "Community", "Environment"};
+            int created = 0;
+            
+            for (String categoryName : categories) {
+                try {
+                    categoryService.createCategory(categoryName, null);
+                    created++;
+                } catch (RuntimeException e) {
+                    // Category might already exist, skip
+                    System.out.println("Category already exists: " + categoryName);
+                }
+            }
+            
+            return ResponseEntity.ok(created + " categories initialized successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to initialize categories: " + e.getMessage());
+        }
+    }
 }

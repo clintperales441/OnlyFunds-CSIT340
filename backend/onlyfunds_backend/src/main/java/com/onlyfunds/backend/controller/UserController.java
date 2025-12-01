@@ -28,12 +28,13 @@ public class UserController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> loginUser(@Valid @RequestBody UserLoginDTO dto) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody UserLoginDTO dto) {
         try {
             UserResponseDTO response = userService.loginUser(dto);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
     }
     

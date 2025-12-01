@@ -203,6 +203,54 @@ nav a:hover {
   margin: 0 auto;
 }
 
+/* Category Filter */
+.category-filter {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.category-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: white;
+  border: 2px solid #e8e6f8;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.category-tab:hover {
+  border-color: #8b80f9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(91, 65, 241, 0.15);
+}
+
+.category-tab.active {
+  background: linear-gradient(135deg, #5b41f1 0%, #8b80f9 100%);
+  border-color: #5b41f1;
+  color: white;
+  box-shadow: 0 4px 12px rgba(91, 65, 241, 0.3);
+}
+
+.category-icon {
+  font-size: 18px;
+}
+
+.category-name {
+  font-size: 14px;
+}
+
 .campaign-grid {
   max-width: 1200px;
   margin: 0 auto;
@@ -224,6 +272,12 @@ nav a:hover {
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
+.campaign-image {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
 .campaign-image .placeholder {
   height: 220px;
   display: flex;
@@ -231,6 +285,20 @@ nav a:hover {
   justify-content: center;
   font-weight: 600;
   font-size: 1.4rem;
+}
+
+.campaign-category-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #5b41f1;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 2;
 }
 
 .campaign-details {

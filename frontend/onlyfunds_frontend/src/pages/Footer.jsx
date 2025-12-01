@@ -1,11 +1,12 @@
+import React, { forwardRef } from 'react';
 import './Homepage.css';
 
 
-const Footer = () => {
+const Footer = forwardRef((props, ref) => {
  
 
   return (
-    <footer className="footer">
+    <footer className="footer" ref={ref}>
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="logo">ONLY<span>FUNDS</span></div>
@@ -50,6 +51,8 @@ const Footer = () => {
         </div>
       </footer>
   );
-};
+});
+
+Footer.displayName = 'Footer';
 
 export default Footer;
