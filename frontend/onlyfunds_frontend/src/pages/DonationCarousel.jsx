@@ -1,5 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import './DonationCarousel.css';
+import { donationService } from '../services/donationService';
+import { userService } from '../services/userService';
+import { campaignService } from '../services/campaignService';
+import ReceiptModal from './ReceiptModal';
 
 // Import your actual images
 
@@ -7,7 +11,7 @@ import educationFund from '../assets/images/education-fund-card.jpg';
 import healthSupport from '../assets/images/health-support-card.jpg';
 import petDonation from '../assets/images/pet-donation-card.jpg';
 
-const DonationCarousel = ({ onNavigateToCampaign }) => {
+const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showDonationForm, setShowDonationForm] = useState(false);
@@ -23,39 +27,70 @@ const DonationCarousel = ({ onNavigateToCampaign }) => {
   });
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [cardInfo, setCardInfo] = useState({ number: '', name: '', expiry: '', cvc: '' });
+  const [processingDonation, setProcessingDonation] = useState(false);
+  const [donationCards, setDonationCards] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [receiptData, setReceiptData] = useState(null);
 
-  const donationCards = [
-    {
-      id: 1,
-      campaignId: 1,
-      title: 'Pet Rescue',
-      description: 'Save and rehabilitate abandoned animals, providing shelter, food, and veterinary care.',
-      image: petDonation,
-      goal: '$50,000',
-      raised: '$39,000',
-      percentage: 78
-    },
-    {
-      id: 2,
-      campaignId: 2,
-      title: 'Education Fund',
-      description: 'Provide scholarships, books, and learning materials to students who need them most.',
-      image: educationFund,
-      goal: '$40,000',
-      raised: '$24,800',
-      percentage: 62
-    },
-    {
-      id: 3,
-      campaignId: 3,
-      title: 'Health Support',
-      description: 'Deliver essential medical care, supplies, and treatment to underserved communities.',
-      image: healthSupport,
-      goal: '$75,000',
-      raised: '$63,750',
-      percentage: 85
-    }
-  ];
+  // Fallback images
+  const defaultImages = [petDonation, educationFund, healthSupport];
+
+  // Fetch real campaigns from API
+  useEffect(() => {
+    const loadCampaigns = async () => {
+      try {
+        const campaigns = await campaignService.getAllCampaigns();
+        if (campaigns && campaigns.length > 0) {
+          // Map campaigns to carousel format
+          const mappedCampaigns = campaigns.slice(0, 3).map((campaign, index) => ({
+            id: campaign.campaignId,
+            campaignId: campaign.campaignId,
+            title: campaign.campaignTitle || campaign.title,
+            description: campaign.description,
+            image: defaultImages[index % defaultImages.length],
+            goal: `$${campaign.goal?.toLocaleString() || '0'}`,
+            raised: `$${campaign.raised?.toLocaleString() || '0'}`,
+            percentage: campaign.goal > 0 ? Math.round((campaign.raised / campaign.goal) * 100) : 0
+          }));
+          setDonationCards(mappedCampaigns);
+        } else {
+          // Use fallback data if no campaigns exist
+          setDonationCards([
+            {
+              id: 'demo-1',
+              campaignId: 'demo-1',
+              title: 'No Campaigns Available',
+              description: 'Please create a campaign first to enable donations.',
+              image: petDonation,
+              goal: '$0',
+              raised: '$0',
+              percentage: 0
+            }
+          ]);
+        }
+      } catch (error) {
+        console.error('Failed to load campaigns:', error);
+        // Use fallback on error
+        setDonationCards([
+          {
+            id: 'demo-1',
+            campaignId: 'demo-1',
+            title: 'Unable to Load Campaigns',
+            description: 'Please check your connection and try again.',
+            image: petDonation,
+            goal: '$0',
+            raised: '$0',
+            percentage: 0
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadCampaigns();
+  }, []);
 
   const nextSlide = () => {
     if (isAnimating) return;
@@ -87,6 +122,12 @@ const DonationCarousel = ({ onNavigateToCampaign }) => {
   }, [donationCards.length]);
 
   const handleOpenDonationForm = (card) => {
+    // Prevent donations to demo/placeholder campaigns
+    if (!card.campaignId || card.campaignId.toString().startsWith('demo')) {
+      alert('This is a placeholder. Please create a campaign first to enable donations.');
+      return;
+    }
+    
     setSelectedCard(card);
     setShowDonationForm(true);
     setDonationAmount(25);
@@ -125,25 +166,78 @@ const DonationCarousel = ({ onNavigateToCampaign }) => {
     else setDonationAmount(0);
   };
 
-  const handleCompleteDonation = (e) => {
+  const handleCompleteDonation = async (e) => {
     e.preventDefault();
-    console.log('Carousel Donation submitted:', {
-      ...donorInfo,
-      amount: donationAmount,
-      campaignTitle: selectedCard.title,
-      paymentMethod,
-      cardInfo
-    });
-    alert(`Thank you ${donorInfo.firstName}! Your donation of $${donationAmount} to ${selectedCard.title} is being processed (Card).`);
-    handleCloseDonationForm();
+    
+    // Validation
+    if (!donorInfo.firstName || !donorInfo.lastName || !donorInfo.email) {
+      alert('Please fill in all required donor information');
+      return;
+    }
+    
+    if (!cardInfo.name || !cardInfo.expiry || !cardInfo.cvc) {
+      alert('Please fill in all card information');
+      return;
+    }
+    
+    if (donationAmount <= 0) {
+      alert('Please enter a valid donation amount');
+      return;
+    }
+    
+    setProcessingDonation(true);
+    
+    try {
+      const currentUser = userService.getCurrentUser();
+      
+      const donationData = {
+        campaignId: selectedCard.campaignId,
+        userId: currentUser?.userId || null,
+        amount: donationAmount,
+        paymentMethod: paymentMethod === 'card' ? 'CREDIT_CARD' : 'DEBIT_CARD',
+        donorInfo: {
+          firstName: donorInfo.firstName,
+          lastName: donorInfo.lastName,
+          email: donorInfo.email,
+          phone: donorInfo.phone,
+          message: donorInfo.message
+        },
+        cardInfo: {
+          name: cardInfo.name,
+          cvc: cardInfo.cvc,
+          expiry: cardInfo.expiry
+        }
+      };
+      
+      const response = await donationService.createDonation(donationData);
+      
+      // Show receipt modal
+      setReceiptData({
+        receiptId: response.receiptId,
+        date: new Date().toISOString(),
+        campaignTitle: selectedCard.title,
+        donorName: `${donorInfo.firstName} ${donorInfo.lastName}`,
+        donorEmail: donorInfo.email,
+        amount: donationAmount,
+        paymentMethod: paymentMethod === 'card' ? 'Credit Card' : 'Debit Card'
+      });
+      
+      handleCloseDonationForm();
+      setShowReceipt(true);
+    } catch (error) {
+      alert(`Donation failed: ${error.message || 'Please try again.'}`);
+    } finally {
+      setProcessingDonation(false);
+    }
   };
 
   return (
-    <div className="carousel-container">
-      <div className="carousel-header">
-        <h2>Choose Your Cause</h2>
-        <p>Select a foundation that resonates with you and make an impact today through a direct donation.</p>
-      </div>
+    <>
+      <div className="carousel-container" ref={ref}>
+        <div className="carousel-header">
+          <h2>Choose Your Cause</h2>
+          <p>Select a foundation that resonates with you and make an impact today through a direct donation.</p>
+        </div>
 
       <div className="carousel-wrapper">
         <button className="carousel-btn prev" onClick={prevSlide} aria-label="Previous">
@@ -375,8 +469,12 @@ const DonationCarousel = ({ onNavigateToCampaign }) => {
                 <button type="button" className="carousel-btn-cancel" onClick={handleCloseDonationForm}>
                   Cancel
                 </button>
-                <button type="submit" className="carousel-btn-submit">
-                  Donate ${donationAmount}
+                <button 
+                  type="submit" 
+                  className="carousel-btn-submit"
+                  disabled={processingDonation}
+                >
+                  {processingDonation ? 'Processing...' : `Donate $${donationAmount}`}
                 </button>
               </div>
 
@@ -387,8 +485,19 @@ const DonationCarousel = ({ onNavigateToCampaign }) => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+      
+      {/* Receipt Modal */}
+      {showReceipt && receiptData && (
+        <ReceiptModal 
+          receipt={receiptData} 
+          onClose={() => setShowReceipt(false)} 
+        />
+      )}
+    </>
   );
-};
+});
+
+DonationCarousel.displayName = 'DonationCarousel';
 
 export default DonationCarousel;

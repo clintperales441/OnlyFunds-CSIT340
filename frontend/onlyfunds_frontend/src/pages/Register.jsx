@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import './Register.css';
+import { userService } from '../services/userService';
 
 // Accept onRegister callback for data persistence
-const Register = ({ onBackToHome, onRegister }) => {
+const Register = ({ onBackToHome, onRegister, onNavigateToLogin }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -16,6 +17,8 @@ const Register = ({ onBackToHome, onRegister }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -73,11 +76,28 @@ const Register = ({ onBackToHome, onRegister }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      // Pass all user data to parent for proper login
-      if (onRegister) {
-        onRegister({ ...formData });
+      setLoading(true);
+      setErrors({});
+      setSuccessMessage('');
+      
+      try {
+        // Call backend API to register user
+        const response = await userService.register(formData);
+        
+        setSuccessMessage('Registration successful! Logging you in...');
+        
+        // Pass user data to parent component (App will handle login and redirect)
+        if (onRegister) {
+          onRegister(response.user || response);
+        }
+      } catch (error) {
+        setErrors({ 
+          submit: error.message || 'Registration failed. Please try again.' 
+        });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -126,6 +146,32 @@ const Register = ({ onBackToHome, onRegister }) => {
             <p className="subtitle">Fill in your details to get started</p>
 
             <div className="register-form">
+              
+              {successMessage && (
+                <div className="success-message" style={{ 
+                  padding: '12px', 
+                  marginBottom: '20px', 
+                  background: '#d4edda', 
+                  color: '#155724', 
+                  borderRadius: '8px',
+                  textAlign: 'center'
+                }}>
+                  {successMessage}
+                </div>
+              )}
+              
+              {errors.submit && (
+                <div className="error-message" style={{ 
+                  padding: '12px', 
+                  marginBottom: '20px', 
+                  background: '#f8d7da', 
+                  color: '#721c24', 
+                  borderRadius: '8px',
+                  textAlign: 'center'
+                }}>
+                  {errors.submit}
+                </div>
+              )}
 
               {/* Account Type Selector */}
               <div className="account-type-selector">
@@ -271,12 +317,17 @@ const Register = ({ onBackToHome, onRegister }) => {
                 {errors.agreeToTerms && <span className="error-message">{errors.agreeToTerms}</span>}
               </div>
 
-              <button type="button" onClick={handleSubmit} className="register-button">
-                Create Account
+              <button 
+                type="button" 
+                onClick={handleSubmit} 
+                className="register-button"
+                disabled={loading}
+              >
+                {loading ? 'Creating Account...' : 'Create Account'}
               </button>
 
               <div className="login-link">
-                Already have an account? <a href="#login" onClick={(e) => { e.preventDefault(); onRegister && onRegister({ goToLogin: true }); }}>Log in here</a>
+                Already have an account? <a href="#login" onClick={(e) => { e.preventDefault(); onNavigateToLogin && onNavigateToLogin(); }}>Log in here</a>
               </div>
             </div>
           </div>

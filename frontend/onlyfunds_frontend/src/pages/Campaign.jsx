@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Campaign.css';
+import { campaignService } from '../services/campaignService';
+import { donationService } from '../services/donationService';
+import { userService } from '../services/userService';
 
 const Campaign = ({ campaignId = 1, createdCampaigns = [], onBackToHome }) => {
   const [campaign, setCampaign] = useState(null);
@@ -7,6 +10,7 @@ const Campaign = ({ campaignId = 1, createdCampaigns = [], onBackToHome }) => {
   const [loading, setLoading] = useState(true);
   const [selectedDonationAmount, setSelectedDonationAmount] = useState(25);
   const [customAmount, setCustomAmount] = useState('');
+  const [donationUpdate, setDonationUpdate] = useState(false);
   const [showDonationForm, setShowDonationForm] = useState(false);
   const [donorInfo, setDonorInfo] = useState({
     firstName: '',
@@ -19,13 +23,28 @@ const Campaign = ({ campaignId = 1, createdCampaigns = [], onBackToHome }) => {
   const [cardInfo, setCardInfo] = useState({ number: '', name: '', expiry: '', cvc: '' });
 
   useEffect(() => {
-    // Simulated campaign data - Replace with actual API call
     const fetchCampaign = async () => {
+      setLoading(true);
       try {
-        // const response = await fetch(`/api/campaign/${campaignId}`);
-        // const data = await response.json();
+        // Try to fetch from backend first
+        const data = await campaignService.getCampaignById(campaignId);
+        setCampaign(data);
+        setLoading(false);
+        return;
+      } catch (error) {
+        console.log('Failed to fetch from API, using fallback data:', error);
+      }
+      
+      try {
+        // Fallback: Check created campaigns
+        const localCampaign = createdCampaigns.find(c => c.id === campaignId);
+        if (localCampaign) {
+          setCampaign(localCampaign);
+          setLoading(false);
+          return;
+        }
         
-        // Campaign-specific data based on ID
+        // Fallback: Campaign-specific mock data based on ID
         const campaignDatabase = {
           1: {
             id: 1,
@@ -213,6 +232,34 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
     fetchCampaign();
   }, [campaignId]);
 
+  // Real-time donation polling
+  useEffect(() => {
+    if (!campaign || !campaign.campaignId) return;
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const updatedCampaign = await campaignService.getCampaignById(campaign.campaignId || campaign.id);
+        
+        // Check if there's a change in raised amount or donors
+        if (updatedCampaign.raised !== campaign.raised || updatedCampaign.donors !== campaign.donors) {
+          setCampaign(prev => ({
+            ...prev,
+            raised: updatedCampaign.raised,
+            donors: updatedCampaign.donors
+          }));
+          
+          // Trigger visual update animation
+          setDonationUpdate(true);
+          setTimeout(() => setDonationUpdate(false), 2000);
+        }
+      } catch (error) {
+        console.error('Failed to poll campaign updates:', error);
+      }
+    }, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [campaign]);
+
   const handleDonate = (amount) => {
     setSelectedDonationAmount(amount);
     setCustomAmount('');
@@ -252,22 +299,66 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
     setPaymentMethod('card');
   };
 
-  const handleCompleteDonation = (e) => {
+  const handleCompleteDonation = async (e) => {
     e.preventDefault();
     const finalAmount = customAmount || selectedDonationAmount;
-    console.log('Donation submitted:', {
-      ...donorInfo,
-      amount: finalAmount,
-      campaignId: campaign.id,
-      paymentMethod,
-      cardInfo
-    });
-    // Here you would typically send to payment gateway
-    alert(`Thank you ${donorInfo.firstName}! Your donation of $${finalAmount} is being processed (Card).`);
-    setShowDonationForm(false);
-    setDonorInfo({ firstName: '', lastName: '', email: '', phone: '', message: '' });
-    setCustomAmount('');
-    setSelectedDonationAmount(25);
+    
+    // Validation
+    if (!donorInfo.firstName || !donorInfo.lastName || !donorInfo.email) {
+      alert('Please fill in all required donor information');
+      return;
+    }
+    
+    if (!cardInfo.name || !cardInfo.expiry || !cardInfo.cvc) {
+      alert('Please fill in all card information');
+      return;
+    }
+    
+    if (finalAmount <= 0) {
+      alert('Please enter a valid donation amount');
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const currentUser = userService.getCurrentUser();
+      
+      const donationData = {
+        campaignId: campaign.campaignId || campaign.id,
+        userId: currentUser?.userId || null,
+        amount: finalAmount,
+        paymentMethod: paymentMethod === 'card' ? 'CREDIT_CARD' : 'DEBIT_CARD',
+        donorInfo: {
+          firstName: donorInfo.firstName,
+          lastName: donorInfo.lastName,
+          email: donorInfo.email,
+          phone: donorInfo.phone,
+          message: donorInfo.message
+        },
+        cardInfo: {
+          name: cardInfo.name,
+          cvc: cardInfo.cvc,
+          expiry: cardInfo.expiry
+        }
+      };
+      
+      await donationService.createDonation(donationData);
+      
+      alert(`Thank you ${donorInfo.firstName}! Your donation of $${finalAmount} has been processed successfully!`);
+      setShowDonationForm(false);
+      setDonorInfo({ firstName: '', lastName: '', email: '', phone: '', message: '' });
+      setCustomAmount('');
+      setSelectedDonationAmount(25);
+      
+      // Refresh campaign data to show updated totals
+      const updatedCampaign = await campaignService.getCampaignById(campaign.campaignId || campaign.id);
+      setCampaign(updatedCampaign);
+    } catch (error) {
+      alert(`Donation failed: ${error.message || 'Please try again.'}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
@@ -300,22 +391,37 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
             <h1>{campaign.title}</h1>
             <div className="campaign-meta">
               <div className="creator-info">
-                <img src={campaign.creator.avatar} alt={campaign.creator.name} className="creator-avatar" />
-                <div className="creator-details">
-                  <p className="creator-name">{campaign.creator.name}</p>
-                  <p className="creator-org">{campaign.creator.organization}</p>
-                </div>
+                {campaign.creator && (
+                  <>
+                    <img src={campaign.creator.avatar || 'https://via.placeholder.com/50'} alt={campaign.creator.name} className="creator-avatar" />
+                    <div className="creator-details">
+                      <p className="creator-name">{campaign.creator.name}</p>
+                      <p className="creator-org">{campaign.creator.organization}</p>
+                    </div>
+                  </>
+                )}
+                {!campaign.creator && (
+                  <div className="creator-details">
+                    <p className="creator-name">Anonymous Creator</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
           {/* Progress Section */}
           <div className="campaign-progress">
+            {donationUpdate && (
+              <div className="donation-update-banner">
+                <span className="update-icon">💝</span>
+                <span>New donation received! Thank you for your support!</span>
+              </div>
+            )}
             <div className="progress-bar-large">
               <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
             </div>
             <div className="progress-stats">
-              <div className="stat">
+              <div className={`stat ${donationUpdate ? 'stat-highlight' : ''}`}>
                 <div className="stat-value">${campaign.raised.toLocaleString()}</div>
                 <div className="stat-label">raised</div>
               </div>
@@ -323,7 +429,7 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
                 <div className="stat-value">${campaign.goal.toLocaleString()}</div>
                 <div className="stat-label">goal</div>
               </div>
-              <div className="stat">
+              <div className={`stat ${donationUpdate ? 'stat-highlight' : ''}`}>
                 <div className="stat-value">{campaign.donors.toLocaleString()}</div>
                 <div className="stat-label">donors</div>
               </div>

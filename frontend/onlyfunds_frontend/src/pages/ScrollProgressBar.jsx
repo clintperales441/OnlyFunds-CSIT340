@@ -45,9 +45,10 @@ const ScrollProgressBar = ({
       <nav className={`temp-navbar ${showNavbar ? 'visible' : ''}`}>
         <div className="temp-navbar-content">
           <div className="temp-nav-links" style={{ flex: 1 }}>
-            <button className="nav-link-btn" onClick={onNavigateToAbout}>About</button>
+            <button className="nav-link-btn" onClick={onNavigateToHome}>Home</button>
             <button className="nav-link-btn" onClick={onNavigateToCampaigns}>Campaigns</button>
             <button className="nav-link-btn" onClick={onNavigateToDonate}>Donate</button>
+            <button className="nav-link-btn" onClick={onNavigateToAbout}>About</button>
             <button className="nav-link-btn" onClick={onNavigateToContact}>Contact</button>
           </div>
           <div className="temp-nav-user-area">

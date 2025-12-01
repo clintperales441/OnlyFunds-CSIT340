@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { userService } from '../services/userService';
 
 const Login = ({ onBackToHome, onLogin, onNavigateToRegister }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const Login = ({ onBackToHome, onLogin, onNavigateToRegister }) => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -39,9 +41,46 @@ const Login = ({ onBackToHome, onLogin, onNavigateToRegister }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (validateForm() && onLogin) {
-      onLogin({ email: formData.email, password: formData.password });
+  const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    
+    setLoading(true);
+    setErrors({});
+    
+    try {
+      // Call backend API to login
+      const response = await userService.login({
+        email: formData.email,
+        password: formData.password
+      });
+      
+      console.log('Login response:', response);
+      
+      // Only proceed if we have valid user data
+      if (response && (response.user || response.userId)) {
+        const userData = response.user || response;
+        localStorage.setItem('currentUser', JSON.stringify(userData));
+        
+        // Pass to parent to update state and redirect
+        if (onLogin) {
+          onLogin(userData);
+        }
+      } else {
+        // No user data returned
+        setLoading(false);
+        setErrors({ 
+          submit: 'Login failed. Invalid response from server.' 
+        });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setLoading(false);
+      // Show error message to user - DO NOT redirect to homepage
+      setErrors({ 
+        submit: error.message || 'Incorrect email or password. If new user, please register first.' 
+      });
     }
   };
 
@@ -101,6 +140,20 @@ const Login = ({ onBackToHome, onLogin, onNavigateToRegister }) => {
             </div>
 
             <div className="login-form">
+              
+              {errors.submit && (
+                <div className="error-message" style={{ 
+                  padding: '12px', 
+                  marginBottom: '20px', 
+                  background: '#f8d7da', 
+                  color: '#721c24', 
+                  borderRadius: '8px',
+                  textAlign: 'center'
+                }}>
+                  {errors.submit}
+                </div>
+              )}
+              
               <div className="form-group">
                 <label>Email Address</label>
                 <input
@@ -151,8 +204,13 @@ const Login = ({ onBackToHome, onLogin, onNavigateToRegister }) => {
                 <a href="#forgot-password" className="forgot-link">Forgot Password?</a>
               </div>
 
-              <button type="button" onClick={handleSubmit} className="login-button">
-                Sign In
+              <button 
+                type="button" 
+                onClick={handleSubmit} 
+                className="login-button"
+                disabled={loading}
+              >
+                {loading ? 'Signing In...' : 'Sign In'}
               </button>
 
               <div className="divider">

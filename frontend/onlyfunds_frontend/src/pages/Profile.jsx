@@ -1,17 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
+import { campaignService } from '../services/campaignService';
+import { donationService } from '../services/donationService';
+import ReceiptModal from './ReceiptModal';
 
 const Profile = ({ currentUser, onBackToHome }) => {
+  const [userCampaigns, setUserCampaigns] = useState([]);
+  const [userDonations, setUserDonations] = useState([]);
+  const [loadingCampaigns, setLoadingCampaigns] = useState(true);
+  const [loadingDonations, setLoadingDonations] = useState(true);
   // Use currentUser as the source of truth
   const [profile, setProfile] = useState(currentUser || {});
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(currentUser || {});
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const [expandedReceipts, setExpandedReceipts] = useState({});
 
   // Keep profile/formData in sync with currentUser when switching users or on first load.
   useEffect(() => {
     if (currentUser) {
       setProfile(currentUser);
       setFormData(currentUser);
+      
+      // Load user's campaigns and donations
+      const loadUserData = async () => {
+        try {
+          if (currentUser.userId) {
+            // Load campaigns
+            setLoadingCampaigns(true);
+            const campaigns = await campaignService.getCampaignsByUser(currentUser.userId);
+            setUserCampaigns(campaigns);
+            
+            // Load donations
+            setLoadingDonations(true);
+            const donations = await donationService.getDonationsByUser(currentUser.userId);
+            setUserDonations(donations);
+          }
+        } catch (error) {
+          console.error('Failed to load user data:', error);
+        } finally {
+          setLoadingCampaigns(false);
+          setLoadingDonations(false);
+        }
+      };
+      
+      loadUserData();
+
+      // Real-time polling for user data updates (campaigns and donations)
+      const pollInterval = setInterval(async () => {
+        try {
+          if (currentUser.userId) {
+            const campaigns = await campaignService.getCampaignsByUser(currentUser.userId);
+            setUserCampaigns(campaigns);
+            
+            const donations = await donationService.getDonationsByUser(currentUser.userId);
+            setUserDonations(donations);
+          }
+        } catch (error) {
+          console.error('Failed to poll user data:', error);
+        }
+      }, 8000); // Poll every 8 seconds
+
+      return () => clearInterval(pollInterval);
     }
   }, [currentUser]);
 
@@ -163,7 +214,109 @@ const Profile = ({ currentUser, onBackToHome }) => {
             </form>
           </div>
         </div>
+
+        {/* Receipt History Section */}
+        <div className="profile-card" style={{ marginTop: '30px' }}>
+          <div className="profile-header">
+            <h2>Donation Receipts</h2>
+            <p>View your donation history and receipts</p>
+          </div>
+          <div className="receipts-list">
+            {loadingDonations ? (
+              <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+                Loading receipts...
+              </div>
+            ) : userDonations.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+                No donations yet. Start making a difference today!
+              </div>
+            ) : (
+              <div className="receipts-list-container">
+                {userDonations.map((donation, index) => {
+                  const isExpanded = expandedReceipts[donation.receiptId || index];
+                  return (
+                    <div key={donation.receiptId || index} className="receipt-list-item">
+                      <div 
+                        className="receipt-list-header"
+                        onClick={() => setExpandedReceipts(prev => ({
+                          ...prev,
+                          [donation.receiptId || index]: !prev[donation.receiptId || index]
+                        }))}
+                      >
+                        <div className="receipt-list-main">
+                          <h3 className="receipt-list-title">{donation.campaignTitle || 'Campaign'}</h3>
+                          <p className="receipt-list-date">
+                            {donation.date ? new Date(donation.date).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            }) : 'N/A'}
+                          </p>
+                        </div>
+                        <div className="receipt-list-right">
+                          <span className="receipt-list-amount">${donation.amount?.toFixed(2) || '0.00'}</span>
+                          <span className={`receipt-expand-icon ${isExpanded ? 'expanded' : ''}`}>▼</span>
+                        </div>
+                      </div>
+                      {isExpanded && (
+                        <div className="receipt-list-details">
+                          <div className="receipt-detail-row">
+                            <span className="receipt-detail-label">Receipt ID:</span>
+                            <span className="receipt-detail-value">{donation.receiptId || 'N/A'}</span>
+                          </div>
+                          <div className="receipt-detail-row">
+                            <span className="receipt-detail-label">Date & Time:</span>
+                            <span className="receipt-detail-value">
+                              {donation.date ? new Date(donation.date).toLocaleString() : 'N/A'}
+                            </span>
+                          </div>
+                          <div className="receipt-detail-row">
+                            <span className="receipt-detail-label">Payment Method:</span>
+                            <span className="receipt-detail-value">{donation.paymentMethod || 'N/A'}</span>
+                          </div>
+                          <div className="receipt-detail-row">
+                            <span className="receipt-detail-label">Donor Name:</span>
+                            <span className="receipt-detail-value">{`${profile.firstName} ${profile.lastName}`}</span>
+                          </div>
+                          <div className="receipt-detail-row">
+                            <span className="receipt-detail-label">Email:</span>
+                            <span className="receipt-detail-value">{profile.email}</span>
+                          </div>
+                          <button 
+                            className="view-receipt-btn"
+                            onClick={() => {
+                              setSelectedReceipt({
+                                receiptId: donation.receiptId,
+                                date: donation.date,
+                                campaignTitle: donation.campaignTitle,
+                                donorName: `${profile.firstName} ${profile.lastName}`,
+                                donorEmail: profile.email,
+                                amount: donation.amount,
+                                paymentMethod: donation.paymentMethod
+                              });
+                              setShowReceipt(true);
+                            }}
+                          >
+                            View Full Receipt
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Receipt Modal */}
+      {showReceipt && selectedReceipt && (
+        <ReceiptModal 
+          receipt={selectedReceipt} 
+          onClose={() => setShowReceipt(false)} 
+        />
+      )}
     </div>
   );
 };

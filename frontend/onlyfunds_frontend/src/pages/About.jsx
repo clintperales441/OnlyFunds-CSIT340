@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import './About.css';
 import yoPhoto from '../assets/images/Yo.jpg';
 import cpPhoto from '../assets/images/Cp.jpg';
@@ -18,9 +18,9 @@ const coreValues = [
   { title: "Impact", img: impactImg, desc: "We focus on creating real, measurable change in people's lives through effective and efficient donation distribution." },
 ];
 
-const About = () => {
+const About = forwardRef(({ onNavigateToDonate }, ref) => {
   return (
-    <div className="about-page">
+    <div className="about-page" ref={ref}>
       {/* Hero Section */}
       <section className="about-hero">
         <div className="hero-content container">
@@ -83,14 +83,15 @@ const About = () => {
         <div className="container">
           <h2>Ready to Make a Difference?</h2>
           <p>Join thousands of donors who are changing lives every day</p>
-          <div className="cta-buttons">
-            <button className="btn-primary">Start Donating</button>
-            <button className="btn-secondary">Create Campaign</button>
+          <div className="cta-buttons" style={{ justifyContent: 'center' }}>
+            <button className="btn-primary" onClick={onNavigateToDonate}>Start Donating</button>
           </div>
         </div>
       </section>
     </div>
   );
-};
+});
+
+About.displayName = 'About';
 
 export default About;

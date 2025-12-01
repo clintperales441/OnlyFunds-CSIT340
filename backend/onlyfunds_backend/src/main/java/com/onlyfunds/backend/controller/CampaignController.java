@@ -19,14 +19,14 @@ public class CampaignController {
     private final CampaignService campaignService;
     
     @PostMapping
-    public ResponseEntity<CampaignResponseDTO> createCampaign(
+    public ResponseEntity<?> createCampaign(
             @RequestParam String userId,
             @Valid @RequestBody CampaignCreateDTO dto) {
         try {
             CampaignResponseDTO response = campaignService.createCampaign(userId, dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
     
