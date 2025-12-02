@@ -42,33 +42,39 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
       try {
         const campaigns = await campaignService.getAllCampaigns();
         if (campaigns && campaigns.length > 0) {
-          // Map campaigns to carousel format
-          const mappedCampaigns = campaigns.slice(0, 3).map((campaign, index) => ({
-            id: campaign.campaignId,
-            campaignId: campaign.campaignId,
-            title: campaign.campaignTitle || campaign.title,
-            description: campaign.description,
-            image: defaultImages[index % defaultImages.length],
-            goal: `$${campaign.goal?.toLocaleString() || '0'}`,
-            raised: `$${campaign.raised?.toLocaleString() || '0'}`,
-            percentage: campaign.goal > 0 ? Math.round((campaign.raised / campaign.goal) * 100) : 0
-          }));
-          setDonationCards(mappedCampaigns);
-        } else {
-          // Use fallback data if no campaigns exist
-          setDonationCards([
-            {
-              id: 'demo-1',
-              campaignId: 'demo-1',
-              title: 'No Campaigns Available',
-              description: 'Please create a campaign first to enable donations.',
-              image: petDonation,
-              goal: '$0',
-              raised: '$0',
-              percentage: 0
-            }
-          ]);
+          // Filter campaigns that have images and map to carousel format
+          const campaignsWithImages = campaigns.filter(c => c.imageUrl);
+          
+          if (campaignsWithImages.length > 0) {
+            const mappedCampaigns = campaignsWithImages.slice(0, 3).map((campaign) => ({
+              id: campaign.campaignId,
+              campaignId: campaign.campaignId,
+              title: campaign.campaignTitle || campaign.title,
+              description: campaign.description,
+              image: campaign.imageUrl,
+              goal: `₱${campaign.goal?.toLocaleString() || '0'}`,
+              raised: `₱${campaign.raised?.toLocaleString() || '0'}`,
+              percentage: campaign.goal > 0 ? Math.round((campaign.raised / campaign.goal) * 100) : 0
+            }));
+            setDonationCards(mappedCampaigns);
+            setLoading(false);
+            return;
+          }
         }
+        
+        // Fallback: Show message if no campaigns with images exist
+        setDonationCards([
+          {
+            id: 'demo-1',
+            campaignId: 'demo-1',
+            title: 'No Campaigns Available',
+            description: 'Please create a campaign with an image to display here.',
+            image: petDonation,
+            goal: '₱0',
+            raised: '₱0',
+            percentage: 0
+          }
+        ]);
       } catch (error) {
         console.error('Failed to load campaigns:', error);
         // Use fallback on error
@@ -79,8 +85,8 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
             title: 'Unable to Load Campaigns',
             description: 'Please check your connection and try again.',
             image: petDonation,
-            goal: '$0',
-            raised: '$0',
+            goal: '₱0',
+            raised: '₱0',
             percentage: 0
           }
         ]);
@@ -169,6 +175,14 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
   const handleCompleteDonation = async (e) => {
     e.preventDefault();
     
+    // Check if user is logged in
+    const currentUser = userService.getCurrentUser();
+    if (!currentUser) {
+      alert('Please log in to make a donation');
+      setShowDonationForm(false);
+      return;
+    }
+    
     // Validation
     if (!donorInfo.firstName || !donorInfo.lastName || !donorInfo.email) {
       alert('Please fill in all required donor information');
@@ -188,8 +202,6 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
     setProcessingDonation(true);
     
     try {
-      const currentUser = userService.getCurrentUser();
-      
       const donationData = {
         campaignId: selectedCard.campaignId,
         userId: currentUser?.userId || null,
@@ -329,7 +341,7 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
                       className={`carousel-amount-btn ${donationAmount === amount && customAmount === '' ? 'active' : ''}`}
                       onClick={() => { setDonationAmount(amount); setCustomAmount(''); }}
                     >
-                      ${amount}
+                      ₱{amount}
                     </button>
                   ))}
                 </div>
@@ -474,7 +486,7 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
                   className="carousel-btn-submit"
                   disabled={processingDonation}
                 >
-                  {processingDonation ? 'Processing...' : `Donate $${donationAmount}`}
+                  {processingDonation ? 'Processing...' : `Donate ₱${donationAmount}`}
                 </button>
               </div>
 

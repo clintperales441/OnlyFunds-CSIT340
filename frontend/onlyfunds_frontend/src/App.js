@@ -68,6 +68,13 @@ function App() {
   };
 
   const handleNavigateToCreate = () => {
+    // Check if user is logged in before allowing campaign creation
+    if (!currentUser) {
+      alert('Please log in to create a campaign');
+      setCurrentView('login');
+      window.scrollTo(0, 0);
+      return;
+    }
     setCurrentView('create');
     window.scrollTo(0, 0);
   };
