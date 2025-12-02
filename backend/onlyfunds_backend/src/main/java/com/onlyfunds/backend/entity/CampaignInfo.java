@@ -38,6 +38,9 @@ public class CampaignInfo {
     @Column(length = 5000)
     private String description;
     
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    private String imageUrl;
+    
     // Calculated field - not stored in database
     @Transient
     public Double getPercentageFund() {

@@ -10,6 +10,8 @@
   width: 100%;
   height: 400px;
   overflow: hidden;
+  display: flex;
+  align-items: flex-end;
 }
 
 .campaign-hero-image {
@@ -24,15 +26,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(91, 65, 241, 0.3) 0%,
-    rgba(139, 128, 249, 0.3) 100%
-  );
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   padding: 20px;
+  z-index: 1;
 }
 
 .campaign-category {

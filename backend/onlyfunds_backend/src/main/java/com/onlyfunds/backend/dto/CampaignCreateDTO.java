@@ -22,4 +22,5 @@ public class CampaignCreateDTO {
     
     private Integer daysLeft;
     private String description;
+    private String imageUrl;
 }

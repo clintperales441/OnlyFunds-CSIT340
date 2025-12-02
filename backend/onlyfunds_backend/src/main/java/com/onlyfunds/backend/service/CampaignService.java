@@ -48,6 +48,7 @@ public class CampaignService {
         info.setGoal(dto.getGoal());
         info.setDaysLeft(dto.getDaysLeft());
         info.setDescription(dto.getDescription());
+        info.setImageUrl(dto.getImageUrl());
         campaignInfoRepository.save(info);
         
         return mapToResponseDTO(savedCampaign, info);
@@ -100,10 +101,72 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
     
+    public java.util.Map<String, Object> getStatistics() {
+        try {
+            List<Campaign> allCampaigns = campaignRepository.findAll();
+            
+            if (allCampaigns.isEmpty()) {
+                return java.util.Map.of(
+                    "totalDonations", 0.0,
+                    "successfulCampaigns", 0L,
+                    "totalDonors", 0L,
+                    "totalCampaigns", 0L,
+                    "satisfactionRate", 0L
+                );
+            }
+            
+            // Calculate total donations
+            double totalDonations = allCampaigns.stream()
+                    .map(Campaign::getCampaignInfo)
+                    .filter(info -> info != null)
+                    .mapToDouble(info -> info.getRaised() != null ? info.getRaised() : 0.0)
+                    .sum();
+            
+            // Count successful campaigns (100% funded or more)
+            long successfulCampaigns = allCampaigns.stream()
+                    .map(Campaign::getCampaignInfo)
+                    .filter(info -> info != null && info.getGoal() != null && info.getGoal() > 0)
+                    .filter(info -> info.getRaised() != null && (info.getRaised() / info.getGoal()) >= 1.0)
+                    .count();
+            
+            // Count total donors
+            long totalDonors = allCampaigns.stream()
+                    .map(Campaign::getCampaignInfo)
+                    .filter(info -> info != null && info.getDonors() != null)
+                    .mapToLong(CampaignInfo::getDonors)
+                    .sum();
+            
+            // Total campaigns count
+            long totalCampaigns = allCampaigns.size();
+            
+            // Calculate satisfaction rate
+            long satisfactionRate = totalCampaigns > 0 ? 
+                Math.round((double) successfulCampaigns / totalCampaigns * 100) : 0;
+            
+            return java.util.Map.of(
+                    "totalDonations", totalDonations,
+                    "successfulCampaigns", successfulCampaigns,
+                    "totalDonors", totalDonors,
+                    "totalCampaigns", totalCampaigns,
+                    "satisfactionRate", satisfactionRate
+            );
+        } catch (Exception e) {
+            // Return zero values if there's any error
+            return java.util.Map.of(
+                "totalDonations", 0.0,
+                "successfulCampaigns", 0L,
+                "totalDonors", 0L,
+                "totalCampaigns", 0L,
+                "satisfactionRate", 0L
+            );
+        }
+    }
+    
     private CampaignResponseDTO mapToResponseDTO(Campaign campaign, CampaignInfo info) {
         return new CampaignResponseDTO(
                 campaign.getCampaignId(),
                 campaign.getCampaignTitle(),
+                campaign.getCategory().getCategoryId(),
                 campaign.getCategory().getCategory(),
                 campaign.getCategory().getImage(),
                 campaign.getUser().getFirstName() + " " + campaign.getUser().getLastName(),
@@ -113,7 +176,8 @@ public class CampaignService {
                 info.getDonors(),
                 info.getDaysLeft(),
                 info.getPercentageFund(),
-                info.getDescription()
+                info.getDescription(),
+                info.getImageUrl()
         );
     }
 }

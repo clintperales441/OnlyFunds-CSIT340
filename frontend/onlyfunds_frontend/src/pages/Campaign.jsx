@@ -3,6 +3,7 @@ import './Campaign.css';
 import { campaignService } from '../services/campaignService';
 import { donationService } from '../services/donationService';
 import { userService } from '../services/userService';
+import ReceiptModal from './ReceiptModal';
 
 const Campaign = ({ campaignId = 1, createdCampaigns = [], onBackToHome }) => {
   const [campaign, setCampaign] = useState(null);
@@ -21,6 +22,7 @@ const Campaign = ({ campaignId = 1, createdCampaigns = [], onBackToHome }) => {
   });
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [cardInfo, setCardInfo] = useState({ number: '', name: '', expiry: '', cvc: '' });
+  const [receiptData, setReceiptData] = useState(null);
 
   useEffect(() => {
     const fetchCampaign = async () => {
@@ -343,9 +345,20 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
         }
       };
       
-      await donationService.createDonation(donationData);
+      const donationResponse = await donationService.createDonation(donationData);
       
-      alert(`Thank you ${donorInfo.firstName}! Your donation of $${finalAmount} has been processed successfully!`);
+      // Create receipt data
+      const receipt = {
+        receiptId: donationResponse.donationId || `RCP-${Date.now()}`,
+        date: new Date().toISOString(),
+        campaignTitle: campaign.campaignTitle || campaign.title,
+        donorName: `${donorInfo.firstName} ${donorInfo.lastName}`,
+        donorEmail: donorInfo.email,
+        amount: Number(finalAmount),
+        paymentMethod: paymentMethod === 'card' ? 'Credit Card' : 'Debit Card'
+      };
+      
+      setReceiptData(receipt);
       setShowDonationForm(false);
       setDonorInfo({ firstName: '', lastName: '', email: '', phone: '', message: '' });
       setCustomAmount('');
@@ -374,13 +387,17 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
   return (
     <div className="campaign-page">
       {/* Hero Section */}
-      <div className="campaign-hero">
-        <img src={campaign.image} alt={campaign.title} className="campaign-hero-image" />
+      <div className="campaign-hero" style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${campaign.imageUrl || campaign.image || 'https://via.placeholder.com/1200x400?text=Campaign'})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="campaign-hero-overlay">
           <button className="back-button" onClick={onBackToHome}>
             <span>←</span> Back
           </button>
-          <span className="campaign-category">{campaign.category}</span>
+          <span className="campaign-category">{campaign.categoryName || campaign.category}</span>
         </div>
       </div>
 
@@ -441,17 +458,19 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
           </div>
 
           {/* Highlights */}
-          <div className="campaign-highlights">
-            {campaign.highlights.map((highlight, index) => (
-              <div key={index} className="highlight-item">
-                <div className="highlight-icon">{highlight.icon}</div>
-                <div className="highlight-content">
-                  <h4>{highlight.title}</h4>
-                  <p>{highlight.description}</p>
+          {campaign.highlights && campaign.highlights.length > 0 && (
+            <div className="campaign-highlights">
+              {campaign.highlights.map((highlight, index) => (
+                <div key={index} className="highlight-item">
+                  <div className="highlight-icon">{highlight.icon}</div>
+                  <div className="highlight-content">
+                    <h4>{highlight.title}</h4>
+                    <p>{highlight.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Description */}
           <div className="campaign-description-section">
@@ -460,20 +479,22 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
           </div>
 
           {/* Updates Section */}
-          <div className="campaign-updates">
-            <h2>Campaign Updates</h2>
-            <div className="updates-list">
-              {campaign.updates.map((update) => (
-                <div key={update.id} className="update-item">
-                  <div className="update-date">{new Date(update.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
-                  <div className="update-content">
-                    <h4>{update.title}</h4>
-                    <p>{update.content}</p>
+          {campaign.updates && campaign.updates.length > 0 && (
+            <div className="campaign-updates">
+              <h2>Campaign Updates</h2>
+              <div className="updates-list">
+                {campaign.updates.map((update) => (
+                  <div key={update.id} className="update-item">
+                    <div className="update-date">{new Date(update.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                    <div className="update-content">
+                      <h4>{update.title}</h4>
+                      <p>{update.content}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Sidebar - Donation Section */}
@@ -680,6 +701,14 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
             </div>
           </div>
         </div>
+      )}
+
+      {/* Receipt Modal */}
+      {receiptData && (
+        <ReceiptModal 
+          receipt={receiptData} 
+          onClose={() => setReceiptData(null)} 
+        />
       )}
     </div>
   );

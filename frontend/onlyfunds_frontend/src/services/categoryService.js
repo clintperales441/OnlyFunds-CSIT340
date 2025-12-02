@@ -12,6 +12,16 @@ export const categoryService = {
     }
   },
 
+  // Initialize default categories (creates Education, Health, Animal Welfare, Community, Environment)
+  initializeCategories: async () => {
+    try {
+      const response = await api.post('/categories/initialize');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to initialize categories.' };
+    }
+  },
+
   // Create new category (admin only)
   createCategory: async (categoryData) => {
     try {

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ScrollProgressBar from './pages/ScrollProgressBar';
 import Homepage from './pages/Homepage';
 import DonationCarousel from './pages/DonationCarousel';
@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Footer from './pages/Footer';
 import About from './pages/About';
+import { userService } from './services/userService';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -16,6 +17,14 @@ function App() {
   const [createdCampaigns, setCreatedCampaigns] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [registeredUsers, setRegisteredUsers] = useState([]);
+
+  // Restore user session from localStorage on app load
+  useEffect(() => {
+    const storedUser = userService.getCurrentUser();
+    if (storedUser) {
+      setCurrentUser(storedUser);
+    }
+  }, []);
 
   // Section refs for scrolling
   const aboutRef = useRef(null);
@@ -115,6 +124,7 @@ function App() {
   };
 
   const handleLogout = () => {
+    userService.logout(); // Clear localStorage
     setCurrentUser(null);
     setCurrentView('home');
     window.scrollTo(0, 0);

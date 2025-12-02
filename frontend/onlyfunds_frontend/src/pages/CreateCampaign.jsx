@@ -35,22 +35,42 @@ const CreateCampaign = ({ onCancel, onCreate }) => {
   useEffect(() => {
     const loadCategories = async () => {
       setLoadingCategories(true);
+      setError(''); // Clear any previous errors
       try {
-        const cats = await categoryService.getAllCategories();
-        console.log('Loaded categories from API:', cats);
+        let cats = await categoryService.getAllCategories();
+        console.log('Raw API response:', cats);
+        console.log('Is array?', Array.isArray(cats));
+        console.log('Length:', cats?.length);
+        
+        // If no categories exist, initialize them first
+        if (!cats || !Array.isArray(cats) || cats.length === 0) {
+          console.log('No categories found, initializing default categories...');
+          try {
+            await categoryService.initializeCategories();
+            // Retry fetching categories after initialization
+            cats = await categoryService.getAllCategories();
+            console.log('Categories after initialization:', cats);
+          } catch (initErr) {
+            console.error('Failed to initialize categories:', initErr);
+            setError('Failed to initialize categories. Please contact administrator.');
+            setLoadingCategories(false);
+            return;
+          }
+        }
         
         if (cats && Array.isArray(cats) && cats.length > 0) {
           setCategories(cats);
+          // Always set first category as default
           const firstCategoryId = cats[0].categoryId;
           if (firstCategoryId) {
             setCategory(String(firstCategoryId));
-            console.log('Set category to:', firstCategoryId);
+            console.log('Set default category to:', firstCategoryId);
           } else {
             console.error('First category has no categoryId!');
             setError('Categories loaded but missing IDs. Please check backend.');
           }
         } else {
-          console.warn('No categories from API');
+          console.warn('No categories available after initialization');
           setError('No categories available. Please contact administrator.');
         }
       } catch (err) {
@@ -150,15 +170,10 @@ const CreateCampaign = ({ onCancel, onCreate }) => {
       
       setSuccessMessage('Campaign created successfully!');
       
-      // Pass campaign data to parent
+      // Pass campaign data to parent - this will handle navigation
       if (onCreate) {
         onCreate(response);
       }
-      
-      // Redirect after short delay
-      setTimeout(() => {
-        onCancel();
-      }, 1500);
       
     } catch (err) {
       setError(err.message || 'Failed to create campaign. Please try again.');
@@ -222,8 +237,8 @@ const CreateCampaign = ({ onCancel, onCreate }) => {
                   console.log('Category selected:', e.target.value);
                   setCategory(e.target.value);
                 }}
+                required
               >
-                <option value="">Select a category</option>
                 {categories.map(cat => (
                   <option key={cat.categoryId} value={cat.categoryId}>
                     {cat.category}

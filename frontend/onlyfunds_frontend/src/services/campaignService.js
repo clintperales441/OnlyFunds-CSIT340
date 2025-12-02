@@ -32,6 +32,7 @@ export const campaignService = {
         description: campaignData.description || '',
         goal: parseFloat(campaignData.goal),
         daysLeft: parseInt(campaignData.daysLeft) || 30,
+        imageUrl: campaignData.imageUrl || null,
       });
       return response.data;
     } catch (error) {
@@ -57,6 +58,16 @@ export const campaignService = {
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to fetch campaigns by category.' };
+    }
+  },
+
+  // Get platform statistics
+  getStatistics: async () => {
+    try {
+      const response = await api.get('/campaigns/statistics');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch statistics.' };
     }
   },
 };
