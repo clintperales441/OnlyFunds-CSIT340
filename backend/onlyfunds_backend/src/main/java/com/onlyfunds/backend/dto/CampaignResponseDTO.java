@@ -11,6 +11,7 @@ public class CampaignResponseDTO {
     
     private String campaignId;
     private String campaignTitle;
+    private String categoryId;
     private String categoryName;
     private String categoryImage;
     private String creatorName;
@@ -21,4 +22,5 @@ public class CampaignResponseDTO {
     private Integer daysLeft;
     private Double percentageFund;
     private String description;
+    private String imageUrl;
 }

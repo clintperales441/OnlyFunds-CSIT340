@@ -1,6 +1,7 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import './Homepage.css';
 import { campaignService } from '../services/campaignService';
+import { categoryService } from '../services/categoryService';
 
 // Import your actual images directly from the assets folder
 import petDonation from '../assets/images/pet-donation.jpg';
@@ -14,6 +15,15 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
   const [loadingCampaigns, setLoadingCampaigns] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState('default'); // default, a-z, z-a, newest, oldest
+  const [showAll, setShowAll] = useState(false);
+  const [stats, setStats] = useState({
+    totalDonations: 0,
+    successfulCampaigns: 0,
+    satisfactionRate: 0,
+    totalDonors: 0
+  });
   
   // Array of your actual imported images
   const backgroundImages = [
@@ -27,24 +37,60 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [categories, setCategories] = useState([{ id: 'all', name: 'All Causes' }]);
 
-  // Category options with icons
-  const categories = [
-    { id: 'all', name: 'All Causes', icon: '🌟' },
-    { id: '1', name: 'Education', icon: '📚' },
-    { id: '2', name: 'Healthcare', icon: '🏥' },
-    { id: '3', name: 'Animal Welfare', icon: '🐾' },
-    { id: '4', name: 'Community', icon: '🏘️' },
-    { id: '5', name: 'Environment', icon: '🌱' },
-  ];
+  // Fetch categories from backend
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const categoriesData = await categoryService.getAllCategories();
+        const mappedCategories = [
+          { id: 'all', name: 'All Causes' },
+          ...categoriesData.map(cat => ({
+            id: cat.categoryId,
+            name: cat.category
+          }))
+        ];
+        setCategories(mappedCategories);
+      } catch (error) {
+        console.error('Failed to load categories:', error);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
+  // Fetch statistics from backend
+  useEffect(() => {
+    const loadStatistics = async () => {
+      try {
+        const statsData = await campaignService.getStatistics();
+        setStats(statsData);
+      } catch (error) {
+        console.error('Failed to load statistics:', error);
+      }
+    };
+
+    loadStatistics();
+    
+    // Update statistics every 30 seconds
+    const statsInterval = setInterval(loadStatistics, 30000);
+    return () => clearInterval(statsInterval);
+  }, []);
 
   // Fetch campaigns from backend
   useEffect(() => {
     const loadCampaigns = async () => {
       try {
         const data = await campaignService.getAllCampaigns();
-        setCampaigns(data);
-        setFilteredCampaigns(data.slice(0, 6)); // Show first 6 campaigns initially
+        // Filter out campaigns without categoryId
+        const validCampaigns = data.filter(campaign => 
+          campaign.categoryId !== null && 
+          campaign.categoryId !== undefined && 
+          campaign.categoryId !== ''
+        );
+        setCampaigns(validCampaigns);
+        setFilteredCampaigns(validCampaigns); // Show all campaigns
       } catch (error) {
         console.error('Failed to load campaigns:', error);
         // Keep empty array on error
@@ -58,9 +104,15 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
     const pollInterval = setInterval(async () => {
       try {
         const data = await campaignService.getAllCampaigns();
-        setCampaigns(data);
-        // Re-filter based on current category
-        filterCampaignsByCategory(data, selectedCategory);
+        // Filter out campaigns without categoryId
+        const validCampaigns = data.filter(campaign => 
+          campaign.categoryId !== null && 
+          campaign.categoryId !== undefined && 
+          campaign.categoryId !== ''
+        );
+        setCampaigns(validCampaigns);
+        // Re-filter based on current filters
+        filterAndSortCampaigns(validCampaigns, selectedCategory, searchQuery, sortOrder);
       } catch (error) {
         console.error('Failed to poll campaigns:', error);
       }
@@ -69,20 +121,52 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
     return () => clearInterval(pollInterval);
   }, []);
 
-  // Filter campaigns by category
-  const filterCampaignsByCategory = (campaignList, categoryId) => {
-    if (categoryId === 'all') {
-      setFilteredCampaigns(campaignList.slice(0, 6));
-    } else {
-      const filtered = campaignList.filter(c => String(c.categoryId) === String(categoryId));
-      setFilteredCampaigns(filtered.slice(0, 6));
+  // Filter and sort campaigns
+  const filterAndSortCampaigns = (campaignList, categoryId, search, sort) => {
+    let filtered = campaignList;
+    
+    // Filter by category
+    if (categoryId !== 'all') {
+      filtered = filtered.filter(c => String(c.categoryId) === String(categoryId));
     }
+    
+    // Filter by search query
+    if (search.trim()) {
+      const searchLower = search.toLowerCase();
+      filtered = filtered.filter(c => 
+        c.campaignTitle?.toLowerCase().includes(searchLower) ||
+        c.description?.toLowerCase().includes(searchLower) ||
+        c.categoryName?.toLowerCase().includes(searchLower)
+      );
+    }
+    
+    // Sort campaigns
+    let sorted = [...filtered];
+    switch (sort) {
+      case 'a-z':
+        sorted.sort((a, b) => (a.campaignTitle || '').localeCompare(b.campaignTitle || ''));
+        break;
+      case 'z-a':
+        sorted.sort((a, b) => (b.campaignTitle || '').localeCompare(a.campaignTitle || ''));
+        break;
+      case 'newest':
+        sorted.sort((a, b) => (b.campaignId || 0) - (a.campaignId || 0));
+        break;
+      case 'oldest':
+        sorted.sort((a, b) => (a.campaignId || 0) - (b.campaignId || 0));
+        break;
+      default:
+        // Keep original order
+        break;
+    }
+    
+    setFilteredCampaigns(sorted); // Store all filtered campaigns
   };
 
-  // Handle category change
+  // Handle category, search, and sort changes
   useEffect(() => {
-    filterCampaignsByCategory(campaigns, selectedCategory);
-  }, [selectedCategory, campaigns]);
+    filterAndSortCampaigns(campaigns, selectedCategory, searchQuery, sortOrder);
+  }, [selectedCategory, campaigns, searchQuery, sortOrder]);
 
   // Function to rotate background images
   useEffect(() => {
@@ -153,6 +237,44 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
           <p>Help make a difference in these critical initiatives</p>
         </div>
 
+        {/* Search and Sort Controls */}
+        <div className="search-sort-container">
+          <div className="search-box">
+            <span className="search-icon">🔍</span>
+            <input
+              type="text"
+              placeholder="Search campaigns by title, description, or category..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+            {searchQuery && (
+              <button 
+                className="clear-search"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+          <div className="sort-dropdown">
+            <label htmlFor="sort-select">Sort by:</label>
+            <select
+              id="sort-select"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="sort-select"
+            >
+              <option value="default">Default</option>
+              <option value="a-z">A to Z</option>
+              <option value="z-a">Z to A</option>
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
+          </div>
+        </div>
+
         {/* Category Filter Tabs */}
         <div className="category-filter">
           {categories.map(cat => (
@@ -161,8 +283,7 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
               className={`category-tab ${selectedCategory === cat.id ? 'active' : ''}`}
               onClick={() => setSelectedCategory(cat.id)}
             >
-              <span className="category-icon">{cat.icon}</span>
-              <span className="category-name">{cat.name}</span>
+              {cat.name}
             </button>
           ))}
         </div>
@@ -176,63 +297,104 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
             No campaigns found in this category. Be the first to create one!
           </div>
         ) : (
-          <div className="campaign-grid">
-            {filteredCampaigns.map(campaign => {
-              const progressPercent = campaign.goal > 0 ? Math.round((campaign.raised / campaign.goal) * 100) : 0;
-              return (
-                <div key={campaign.campaignId} className="campaign-card">
-                  <div className="campaign-image">
-                    {campaign.imageUrl ? (
-                      <img src={campaign.imageUrl} alt={campaign.campaignTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                      <div className="placeholder" style={{ background: '#f8f7ff', color: '#8b80f9' }}>
-                        {campaign.campaignTitle}
-                      </div>
-                    )}
-                    <span className="campaign-category-badge">{campaign.categoryName || 'General'}</span>
-                  </div>
-                  <div className="campaign-details">
-                    <h4>{campaign.campaignTitle}</h4>
-                    <div className="progress-container">
-                      <div className="progress-bar small">
-                        <div className="progress" style={{ width: `${progressPercent}%` }}></div>
-                      </div>
-                      <div className="progress-info">
-                        <span>{progressPercent}% funded</span>
-                        <span>${campaign.raised?.toLocaleString() || '0'} raised</span>
-                      </div>
+          <>
+            <div className="campaign-grid">
+              {(showAll ? filteredCampaigns : filteredCampaigns.slice(0, 3)).map((campaign, index) => {
+                const progressPercent = campaign.goal > 0 ? Math.round((campaign.raised / campaign.goal) * 100) : 0;
+                const isHiddenInitially = index >= 3;
+                return (
+                  <div 
+                    key={campaign.campaignId} 
+                    className={`campaign-card ${isHiddenInitially && showAll ? 'fade-in' : ''}`}
+                    style={{
+                      animationDelay: isHiddenInitially && showAll ? `${(index - 3) * 0.1}s` : '0s'
+                    }}
+                  >
+                    <div className="campaign-image">
+                      {campaign.imageUrl ? (
+                        <img src={campaign.imageUrl} alt={campaign.campaignTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <div className="placeholder" style={{ background: '#f8f7ff', color: '#8b80f9' }}>
+                          {campaign.campaignTitle}
+                        </div>
+                      )}
+                      <span className="campaign-category-badge">{campaign.categoryName || 'General'}</span>
                     </div>
-                    <button 
-                      className="view-campaign-btn" 
-                      onClick={() => onNavigateToCampaign(campaign.campaignId)}
-                    >
-                      View Campaign
-                    </button>
+                    <div className="campaign-details">
+                      <h4>{campaign.campaignTitle}</h4>
+                      <div className="progress-container">
+                        <div className="progress-bar small">
+                          <div className="progress" style={{ width: `${progressPercent}%` }}></div>
+                        </div>
+                        <div className="progress-info">
+                          <span>{progressPercent}% funded</span>
+                          <span>${campaign.raised?.toLocaleString() || '0'} raised</span>
+                        </div>
+                      </div>
+                      <button 
+                        className="view-campaign-btn" 
+                        onClick={() => onNavigateToCampaign(campaign.campaignId)}
+                      >
+                        View Campaign
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+            
+            {/* Show More / Show Less Button */}
+            {filteredCampaigns.length > 3 && (
+              <div className="show-more-container">
+                <button 
+                  className="show-more-btn"
+                  onClick={() => setShowAll(!showAll)}
+                >
+                  {showAll ? (
+                    <>
+                      <span>Show Less</span>
+                      <span className="arrow">▲</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Show More ({filteredCampaigns.length - 3} more)</span>
+                      <span className="arrow">▼</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
 
       <section className="stats-section">
         <div className="stats-grid">
           <div className="stat">
-            <div className="stat-value">$2.8M+</div>
+            <div className="stat-value">
+              ${stats.totalDonations >= 1000000 
+                ? `${(stats.totalDonations / 1000000).toFixed(1)}M+` 
+                : stats.totalDonations >= 1000 
+                ? `${(stats.totalDonations / 1000).toFixed(1)}K+` 
+                : `${stats.totalDonations.toFixed(0)}`}
+            </div>
             <div className="stat-label">Donations Collected</div>
           </div>
           <div className="stat">
-            <div className="stat-value">350+</div>
+            <div className="stat-value">{stats.successfulCampaigns}+</div>
             <div className="stat-label">Successful Campaigns</div>
           </div>
           <div className="stat">
-            <div className="stat-value">98%</div>
-            <div className="stat-label">Satisfied Donors</div>
+            <div className="stat-value">{stats.satisfactionRate}%</div>
+            <div className="stat-label">Satisfaction Rate</div>
           </div>
           <div className="stat">
-            <div className="stat-value">45,000+</div>
-            <div className="stat-label">Lives Impacted</div>
+            <div className="stat-value">
+              {stats.totalDonors >= 1000 
+                ? `${(stats.totalDonors / 1000).toFixed(1)}K+` 
+                : `${stats.totalDonors}+`}
+            </div>
+            <div className="stat-label">Total Donors</div>
           </div>
         </div>
       </section>

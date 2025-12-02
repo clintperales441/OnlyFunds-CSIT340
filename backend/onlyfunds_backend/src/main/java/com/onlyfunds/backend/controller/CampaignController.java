@@ -57,4 +57,14 @@ public class CampaignController {
         List<CampaignResponseDTO> campaigns = campaignService.getCampaignsByCategory(categoryId);
         return ResponseEntity.ok(campaigns);
     }
+    
+    @GetMapping("/statistics")
+    public ResponseEntity<?> getStatistics() {
+        try {
+            var stats = campaignService.getStatistics();
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

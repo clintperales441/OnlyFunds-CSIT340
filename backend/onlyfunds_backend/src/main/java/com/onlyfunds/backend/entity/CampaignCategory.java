@@ -1,5 +1,6 @@
 package com.onlyfunds.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -28,9 +29,11 @@ public class CampaignCategory {
     @Column(name = "image")
     private String image;
     
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Campaign> campaigns = new ArrayList<>();
     
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<CampaignUpdate> updates = new ArrayList<>();
 }

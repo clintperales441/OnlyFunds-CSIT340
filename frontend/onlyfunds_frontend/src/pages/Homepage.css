@@ -203,6 +203,114 @@ nav a:hover {
   margin: 0 auto;
 }
 
+/* Search and Sort Container */
+.search-sort-container {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+  padding: 0 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  font-size: 18px;
+  color: #999;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 45px 14px 45px;
+  border: 2px solid #e8e6f8;
+  border-radius: 50px;
+  font-size: 15px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #8b80f9;
+  box-shadow: 0 4px 12px rgba(91, 65, 241, 0.15);
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.clear-search {
+  position: absolute;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.clear-search:hover {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.sort-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 2px solid #e8e6f8;
+  transition: all 0.3s ease;
+}
+
+.sort-dropdown:focus-within {
+  border-color: #8b80f9;
+  box-shadow: 0 4px 12px rgba(91, 65, 241, 0.15);
+}
+
+.sort-dropdown label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  white-space: nowrap;
+}
+
+.sort-select {
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #5b41f1;
+  cursor: pointer;
+  padding: 2px;
+  font-family: inherit;
+}
+
+.sort-select:focus {
+  outline: none;
+}
+
+.sort-select option {
+  padding: 8px;
+}
+
 /* Category Filter */
 .category-filter {
   max-width: 1200px;
@@ -337,6 +445,80 @@ nav a:hover {
 
 .view-campaign-btn:active {
   transform: translateY(0);
+}
+
+/* Campaign Grid Animations */
+.campaign-grid {
+  transition: all 0.3s ease;
+}
+
+.campaign-card {
+  transition: all 0.4s ease;
+}
+
+.campaign-card.fade-in {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Show More/Less Button */
+.show-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding: 0 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.show-more-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 32px;
+  background: white;
+  border: 2px solid #8b80f9;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #5b41f1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.show-more-btn:hover {
+  background: linear-gradient(135deg, #5b41f1 0%, #8b80f9 100%);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(91, 65, 241, 0.25);
+}
+
+.show-more-btn .arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.show-more-btn:hover .arrow {
+  transform: scale(1.2);
 }
 
 .progress-bar.small {
