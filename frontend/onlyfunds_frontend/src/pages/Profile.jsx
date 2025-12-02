@@ -77,8 +77,11 @@ const Profile = ({ currentUser, onBackToHome }) => {
   const handleSave = () => {
     setProfile(formData);
     setIsEditing(false);
-    alert('Profile updated locally! (This does NOT sync to login until you wire it up.)');
-    // If you want changes to persist globally, lift state up and update App.js' currentUser as well!
+    // Update localStorage to persist changes
+    localStorage.setItem('currentUser', JSON.stringify(formData));
+    alert('Profile updated successfully!');
+    // Reload page to reflect changes across all components
+    window.location.reload();
   };
 
   const handleCancel = () => {
@@ -254,7 +257,7 @@ const Profile = ({ currentUser, onBackToHome }) => {
                           </p>
                         </div>
                         <div className="receipt-list-right">
-                          <span className="receipt-list-amount">${donation.amount?.toFixed(2) || '0.00'}</span>
+                          <span className="receipt-list-amount">₱{donation.amount?.toFixed(2) || '0.00'}</span>
                           <span className={`receipt-expand-icon ${isExpanded ? 'expanded' : ''}`}>▼</span>
                         </div>
                       </div>

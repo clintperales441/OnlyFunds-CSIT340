@@ -276,6 +276,13 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
   };
 
   const handleSubmitDonation = () => {
+    // Check if user is logged in before showing donation form
+    const currentUser = userService.getCurrentUser();
+    if (!currentUser) {
+      alert('Please log in to make a donation');
+      return;
+    }
+    
     const finalAmount = customAmount || selectedDonationAmount;
     if (finalAmount > 0) {
       setShowDonationForm(true);
@@ -305,6 +312,13 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
     e.preventDefault();
     const finalAmount = customAmount || selectedDonationAmount;
     
+    // Check if user is logged in
+    const currentUser = userService.getCurrentUser();
+    if (!currentUser) {
+      alert('Please log in to make a donation');
+      return;
+    }
+    
     // Validation
     if (!donorInfo.firstName || !donorInfo.lastName || !donorInfo.email) {
       alert('Please fill in all required donor information');
@@ -324,8 +338,6 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
     setLoading(true);
     
     try {
-      const currentUser = userService.getCurrentUser();
-      
       const donationData = {
         campaignId: campaign.campaignId || campaign.id,
         userId: currentUser?.userId || null,
@@ -439,11 +451,11 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
             </div>
             <div className="progress-stats">
               <div className={`stat ${donationUpdate ? 'stat-highlight' : ''}`}>
-                <div className="stat-value">${campaign.raised.toLocaleString()}</div>
+                <div className="stat-value">₱{campaign.raised.toLocaleString()}</div>
                 <div className="stat-label">raised</div>
               </div>
               <div className="stat">
-                <div className="stat-value">${campaign.goal.toLocaleString()}</div>
+                <div className="stat-value">₱{campaign.goal.toLocaleString()}</div>
                 <div className="stat-label">goal</div>
               </div>
               <div className={`stat ${donationUpdate ? 'stat-highlight' : ''}`}>
@@ -509,7 +521,7 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
                   className={`preset-btn ${selectedDonationAmount === amount ? 'active' : ''}`}
                   onClick={() => handleDonate(amount)}
                 >
-                  ${amount}
+                  ₱{amount}
                 </button>
               ))}
             </div>
@@ -577,7 +589,7 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
               <p className="campaign-name">{campaign.title}</p>
               <div className="donation-amount-display">
                 <span>Amount: </span>
-                <span className="amount">${customAmount || selectedDonationAmount}</span>
+                <span className="amount">₱{customAmount || selectedDonationAmount}</span>
               </div>
               <div className="payment-methods">
                 <label>Payment Method</label>
@@ -691,7 +703,7 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
                   Cancel
                 </button>
                 <button type="submit" className="btn-submit">
-                  Complete Donation - ${customAmount || selectedDonationAmount}
+                  Complete Donation - ₱{customAmount || selectedDonationAmount}
                 </button>
               </div>
             </form>

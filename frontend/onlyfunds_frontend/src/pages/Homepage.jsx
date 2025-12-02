@@ -328,7 +328,7 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
                         </div>
                         <div className="progress-info">
                           <span>{progressPercent}% funded</span>
-                          <span>${campaign.raised?.toLocaleString() || '0'} raised</span>
+                          <span>₱{campaign.raised?.toLocaleString() || '0'} raised</span>
                         </div>
                       </div>
                       <button 
@@ -372,7 +372,7 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
         <div className="stats-grid">
           <div className="stat">
             <div className="stat-value">
-              ${stats.totalDonations >= 1000000 
+              ₱{stats.totalDonations >= 1000000 
                 ? `${(stats.totalDonations / 1000000).toFixed(1)}M+` 
                 : stats.totalDonations >= 1000 
                 ? `${(stats.totalDonations / 1000).toFixed(1)}K+` 

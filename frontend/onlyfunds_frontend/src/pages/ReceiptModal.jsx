@@ -21,7 +21,7 @@ Campaign: ${receipt.campaignTitle}
 Donor: ${receipt.donorName}
 Email: ${receipt.donorEmail}
 
-Amount: $${receipt.amount.toFixed(2)}
+Amount: ₱${receipt.amount.toFixed(2)}
 
 Payment Method: ${receipt.paymentMethod}
 
@@ -86,7 +86,7 @@ This receipt serves as proof of your donation.
 
             <div className="receipt-row receipt-amount">
               <span className="receipt-label">Donation Amount:</span>
-              <span className="receipt-value">${receipt.amount.toFixed(2)}</span>
+              <span className="receipt-value">₱{receipt.amount.toFixed(2)}</span>
             </div>
 
             <div className="receipt-row">
