@@ -5,7 +5,6 @@ import { userService } from '../services/userService';
 import { campaignService } from '../services/campaignService';
 import ReceiptModal from './ReceiptModal';
 
-// Import your actual images
 
 import educationFund from '../assets/images/education-fund-card.jpg';
 import healthSupport from '../assets/images/health-support-card.jpg';
@@ -62,7 +61,7 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
           }
         }
         
-        // Fallback: Show message if no campaigns with images exist
+     
         setDonationCards([
           {
             id: 'demo-1',
