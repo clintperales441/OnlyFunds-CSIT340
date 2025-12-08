@@ -153,7 +153,7 @@ function App() {
       />
       {currentView === 'home' ? (
         <>
-          <Homepage ref={campaignsRef} onNavigateToCampaign={handleNavigateToCampaign} onNavigateToCreate={handleNavigateToCreate} onNavigateToDonate={handleNavigateToDonate} />
+          <Homepage ref={campaignsRef} onNavigateToCampaign={handleNavigateToCampaign} onNavigateToCreate={handleNavigateToCreate} onNavigateToDonate={handleNavigateToDonate} onNavigateToAbout={handleNavigateToAbout} />
           <DonationCarousel ref={donateRef} onNavigateToCampaign={handleNavigateToCampaign} />
           <About ref={aboutRef} onNavigateToDonate={handleNavigateToDonate} />
           <Footer ref={contactRef}/>

@@ -3,20 +3,19 @@ import './Homepage.css';
 import { campaignService } from '../services/campaignService';
 import { categoryService } from '../services/categoryService';
 
-// Import your actual images directly from the assets folder
 import petDonation from '../assets/images/pet-donation.jpg';
 import childrenFoundation from '../assets/images/children-foundation.jpg';
 import educationFund from '../assets/images/education-fund.jpg';
 import healthSupport from '../assets/images/health-support.jpg';
 import communityHelp from '../assets/images/community-help.jpg';
 
-const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavigateToDonate }, ref) => {
+const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavigateToDonate, onNavigateToAbout }, ref) => {
   const [campaigns, setCampaigns] = useState([]);
   const [loadingCampaigns, setLoadingCampaigns] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState('default'); // default, a-z, z-a, newest, oldest
+  const [sortOrder, setSortOrder] = useState('default'); 
   const [showAll, setShowAll] = useState(false);
   const [stats, setStats] = useState({
     totalDonations: 0,
@@ -25,7 +24,7 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
     totalDonors: 0
   });
   
-  // Array of your actual imported images
+ 
   const backgroundImages = [
     petDonation,
     childrenFoundation,
@@ -413,10 +412,10 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
               <li>Secure payment processing</li>
               <li>Tax-deductible donations</li>
             </ul>
-            <button className="learn-more">Learn More About Us</button>
+            <button className="learn-more" onClick={onNavigateToAbout}>Learn More About Us</button>
           </div>
           <div className="info-image">
-            <div className="placeholder" style={{ background: '#f1efff', color: '#5841f1' }}>Transparency & Impact</div>
+            {/* <div className="placeholder" style={{ background: '#f1efff', color: '#5841f1' }}>Transparency & Impact</div> */}
           </div>
         </div>
       </section>
