@@ -349,7 +349,7 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
               <div className="carousel-custom-amount">
                 <label htmlFor="carouselCustomAmount">Or enter a custom amount</label>
                 <div className="carousel-custom-input">
-                  <span className="currency">$</span>
+                  <span className="currency">₱</span>
                   <input
                     id="carouselCustomAmount"
                     type="number"

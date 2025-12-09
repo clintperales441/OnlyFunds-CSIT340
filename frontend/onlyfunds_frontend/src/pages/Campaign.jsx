@@ -529,7 +529,7 @@ By supporting this campaign, you're ensuring that people in remote areas have ac
             <div className="custom-donation">
               <label htmlFor="custom-amount">Custom Amount</label>
               <div className="custom-input-wrapper">
-                <span className="currency">$</span>
+                <span className="currency">₱</span>
                 <input
                   id="custom-amount"
                   type="number"
