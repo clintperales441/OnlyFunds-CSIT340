@@ -1,3 +1,3 @@
 # Onlyfunds
 
-A donation drive website with purpose of donating directly to those who's need that centeralized connection within the organization, and does not required a long process of step to make a donation, just simply donate!
+This donation-drive website is developed to provide a direct and meaningful link between donors and individuals or communities in need. By centralizing donation opportunities within a single platform, it eliminates the traditional lengthy processes and paperwork commonly required in charitable giving. Instead, it offers a straightforward and user-friendly experience where donors can contribute quickly, securely, and without unnecessary steps. Through this efficient approach, the platform encourages more people to participate, making charitable support more accessible and impactful.
