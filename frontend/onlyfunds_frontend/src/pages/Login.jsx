@@ -213,20 +213,6 @@ const Login = ({ onBackToHome, onLogin, onNavigateToRegister }) => {
                 {loading ? 'Signing In...' : 'Sign In'}
               </button>
 
-              <div className="divider">
-                <span>or continue with</span>
-              </div>
-
-              <div className="social-login">
-                <button type="button" className="social-button google">
-                  <span className="social-icon">G</span>
-                  Google
-                </button>
-                <button type="button" className="social-button facebook">
-                  <span className="social-icon">f</span>
-                  Facebook
-                </button>
-              </div>
 
               <div className="register-link">
                 Don't have an account?{" "}
