@@ -38,7 +38,7 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
   const [isPaused, setIsPaused] = useState(false);
   const [categories, setCategories] = useState([{ id: 'all', name: 'All Causes' }]);
 
-  // Fetch categories from backend
+ 
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -59,7 +59,7 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
     loadCategories();
   }, []);
 
-  // Fetch statistics from backend
+ 
   useEffect(() => {
     const loadStatistics = async () => {
       try {
@@ -72,64 +72,63 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
 
     loadStatistics();
     
-    // Update statistics every 30 seconds
+    
     const statsInterval = setInterval(loadStatistics, 30000);
     return () => clearInterval(statsInterval);
   }, []);
 
-  // Fetch campaigns from backend
+  
   useEffect(() => {
     const loadCampaigns = async () => {
       try {
         const data = await campaignService.getAllCampaigns();
-        // Filter out campaigns without categoryId
         const validCampaigns = data.filter(campaign => 
           campaign.categoryId !== null && 
           campaign.categoryId !== undefined && 
           campaign.categoryId !== ''
         );
         setCampaigns(validCampaigns);
-        setFilteredCampaigns(validCampaigns); // Show all campaigns
+        setFilteredCampaigns(validCampaigns); 
       } catch (error) {
         console.error('Failed to load campaigns:', error);
-        // Keep empty array on error
+
       } finally {
         setLoadingCampaigns(false);
       }
     };
     loadCampaigns();
 
-    // Real-time polling for campaign updates
+  
     const pollInterval = setInterval(async () => {
       try {
         const data = await campaignService.getAllCampaigns();
-        // Filter out campaigns without categoryId
+     
         const validCampaigns = data.filter(campaign => 
           campaign.categoryId !== null && 
           campaign.categoryId !== undefined && 
           campaign.categoryId !== ''
         );
         setCampaigns(validCampaigns);
-        // Re-filter based on current filters
+        
         filterAndSortCampaigns(validCampaigns, selectedCategory, searchQuery, sortOrder);
       } catch (error) {
         console.error('Failed to poll campaigns:', error);
       }
-    }, 10000); // Poll every 10 seconds
+    }, 10000); 
 
     return () => clearInterval(pollInterval);
   }, []);
 
-  // Filter and sort campaigns
+ 
   const filterAndSortCampaigns = (campaignList, categoryId, search, sort) => {
     let filtered = campaignList;
     
-    // Filter by category
+  
     if (categoryId !== 'all') {
       filtered = filtered.filter(c => String(c.categoryId) === String(categoryId));
     }
     
-    // Filter by search query
+   
     if (search.trim()) {
       const searchLower = search.toLowerCase();
       filtered = filtered.filter(c => 
@@ -139,7 +138,7 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
       );
     }
     
-    // Sort campaigns
+
     let sorted = [...filtered];
     switch (sort) {
       case 'a-z':
@@ -155,19 +154,18 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
         sorted.sort((a, b) => (a.campaignId || 0) - (b.campaignId || 0));
         break;
       default:
-        // Keep original order
         break;
     }
     
-    setFilteredCampaigns(sorted); // Store all filtered campaigns
+    setFilteredCampaigns(sorted); 
   };
 
-  // Handle category, search, and sort changes
+ 
   useEffect(() => {
     filterAndSortCampaigns(campaigns, selectedCategory, searchQuery, sortOrder);
   }, [selectedCategory, campaigns, searchQuery, sortOrder]);
 
-  // Function to rotate background images
+
   useEffect(() => {
     if (isPaused) return;
     
@@ -181,18 +179,18 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
     return () => clearInterval(interval);
   }, [backgroundImages.length, isPaused]);
 
-  // Progress bar animation
-  useEffect(() => {
-    if (isPaused || progress >= 100) return;
+  // // Progress bar animation
+  // useEffect(() => {
+  //   if (isPaused || progress >= 100) return;
     
-    const timer = setTimeout(() => setProgress(progress + 1), 50);
-    return () => clearTimeout(timer);
-  }, [progress, isPaused]);
+  //   const timer = setTimeout(() => setProgress(progress + 1), 50);
+  //   return () => clearTimeout(timer);
+  // }, [progress, isPaused]);
 
   return (
     <div className="homepage">
-      {/* Background slideshow */}
-      <div 
+
+      <div
         className="slideshow"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
@@ -208,11 +206,10 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
         ))}
       </div>
       
-      {/* Content overlay */}
+ 
       <div className="content-overlay">
         <header className="header">
           <h1 className="logo">ONLY<span>FUNDS</span></h1> 
-      
         </header>
 
         <main className="hero">
@@ -342,7 +339,6 @@ const Homepage = forwardRef(({ onNavigateToCampaign, onNavigateToCreate, onNavig
               })}
             </div>
             
-            {/* Show More / Show Less Button */}
             {filteredCampaigns.length > 3 && (
               <div className="show-more-container">
                 <button 

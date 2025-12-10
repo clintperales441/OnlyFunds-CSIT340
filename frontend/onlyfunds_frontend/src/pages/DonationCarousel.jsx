@@ -32,16 +32,16 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
   const [showReceipt, setShowReceipt] = useState(false);
   const [receiptData, setReceiptData] = useState(null);
 
-  // Fallback images
+
   const defaultImages = [petDonation, educationFund, healthSupport];
 
-  // Fetch real campaigns from API
+
   useEffect(() => {
     const loadCampaigns = async () => {
       try {
         const campaigns = await campaignService.getAllCampaigns();
         if (campaigns && campaigns.length > 0) {
-          // Filter campaigns that have images and map to carousel format
+
           const campaignsWithImages = campaigns.filter(c => c.imageUrl);
           
           if (campaignsWithImages.length > 0) {
@@ -76,7 +76,7 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
         ]);
       } catch (error) {
         console.error('Failed to load campaigns:', error);
-        // Use fallback on error
+
         setDonationCards([
           {
             id: 'demo-1',
@@ -118,7 +118,7 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
     setTimeout(() => setIsAnimating(false), 600);
   };
 
-  // Auto-play functionality
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % donationCards.length);
@@ -127,7 +127,6 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
   }, [donationCards.length]);
 
   const handleOpenDonationForm = (card) => {
-    // Prevent donations to demo/placeholder campaigns
     if (!card.campaignId || card.campaignId.toString().startsWith('demo')) {
       alert('This is a placeholder. Please create a campaign first to enable donations.');
       return;
@@ -164,7 +163,6 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
 
   const handleCustomAmountChange = (e) => {
     const val = e.target.value;
-    // keep as string for formatting, but update donationAmount numeric
     setCustomAmount(val);
     const num = Number(val);
     if (!isNaN(num) && num > 0) setDonationAmount(num);
@@ -174,7 +172,6 @@ const DonationCarousel = forwardRef(({ onNavigateToCampaign }, ref) => {
   const handleCompleteDonation = async (e) => {
     e.preventDefault();
     
-    // Check if user is logged in
     const currentUser = userService.getCurrentUser();
     if (!currentUser) {
       alert('Please log in to make a donation');
