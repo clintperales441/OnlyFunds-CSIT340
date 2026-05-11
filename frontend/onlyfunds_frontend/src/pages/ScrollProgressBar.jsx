@@ -15,6 +15,7 @@ const ScrollProgressBar = ({
 }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showNavbar, setShowNavbar] = useState(false);
+  const [isHoveringTop, setIsHoveringTop] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,8 +26,16 @@ const ScrollProgressBar = ({
       setShowNavbar(currentScrollY > 100);
     };
 
+    const handleMouseMove = (e) => {
+      setIsHoveringTop(e.clientY <= 50);
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
   const scrollToTop = () => {
@@ -42,7 +51,7 @@ const ScrollProgressBar = ({
           style={{ width: `${scrollProgress}%` }}
         ></div>
       </div>
-      <nav className={`temp-navbar ${showNavbar ? 'visible' : ''}`}>
+      <nav className={`temp-navbar ${showNavbar || isHoveringTop ? 'visible' : ''}`}>
         <div className="temp-navbar-content">
           <div className="temp-nav-links" style={{ flex: 1 }}>
             <button className="nav-link-btn" onClick={onNavigateToHome}>Home</button>

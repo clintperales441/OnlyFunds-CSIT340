@@ -9,7 +9,7 @@ const Profile = ({ currentUser, onBackToHome }) => {
   const [userDonations, setUserDonations] = useState([]);
   const [loadingCampaigns, setLoadingCampaigns] = useState(true);
   const [loadingDonations, setLoadingDonations] = useState(true);
-  // Use currentUser as the source of truth
+
   const [profile, setProfile] = useState(currentUser || {});
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(currentUser || {});
@@ -77,10 +77,8 @@ const Profile = ({ currentUser, onBackToHome }) => {
   const handleSave = () => {
     setProfile(formData);
     setIsEditing(false);
-    // Update localStorage to persist changes
     localStorage.setItem('currentUser', JSON.stringify(formData));
     alert('Profile updated successfully!');
-    // Reload page to reflect changes across all components
     window.location.reload();
   };
 
@@ -218,7 +216,7 @@ const Profile = ({ currentUser, onBackToHome }) => {
           </div>
         </div>
 
-        {/* Receipt History Section */}
+      
         <div className="profile-card" style={{ marginTop: '30px' }}>
           <div className="profile-header">
             <h2>Donation Receipts</h2>

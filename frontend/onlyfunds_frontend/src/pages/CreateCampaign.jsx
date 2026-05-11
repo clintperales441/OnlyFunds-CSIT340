@@ -282,7 +282,7 @@ const CreateCampaign = ({ onCancel, onCreate }) => {
           </label>
 
           <label>
-            Goal (USD) *
+            Goal (PHP) *
             <input type="number" value={goal} onChange={e => setGoal(e.target.value)} placeholder="5000" />
           </label>
 

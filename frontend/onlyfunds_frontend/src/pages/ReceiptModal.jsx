@@ -9,7 +9,6 @@ const ReceiptModal = ({ receipt, onClose }) => {
   };
 
   const handleDownload = () => {
-    // Create a simple text receipt
     const receiptText = `
 ONLYFUNDS - DONATION RECEIPT
 ================================
